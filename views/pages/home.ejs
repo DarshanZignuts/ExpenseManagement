@@ -1,0 +1,62 @@
+<%- include ("../partials/header2")%>
+
+    <body>
+
+        <% if (result.user){%>
+            <div class="alert login-alert alert-success" role="alert">
+                <h5>
+                    <%= result.user %>
+                </h5>
+                <button class="exit-alert-button" type="button" name="button">
+                    &times;
+                </button>
+            </div>
+            <% } else if (!result.user){ %>
+                <p>
+                    you are doing something worng
+                </p>
+                <% } %>
+                    <div class="float-container">
+                        <div class="float-child text-white">
+                            <ul>
+                                <li>
+                                    <h1>
+                                        <%= result.token%>
+                                    </h1>
+                                    <h4>Name of the application is ‘ExpenseManager’ that manages expenses and helps you
+                                        maintain good money
+                                        health. A
+                                        shade of Blue and White(stability, trust) as primary color and a minty shade of
+                                        blue with a gradient
+                                        (growth) as
+                                        secondary color was chosen keeping in mind the app’s broad target audience and
+                                        their age. For typography
+                                        ‘Arial
+                                        Rounded MT’ and ‘Quicksand’ was confirmed for its versatility.</h4>
+                                </li>
+                                <li>
+                                    As app’s primary feature is to track and manage expenses, the category expense
+                                    tracker got the most
+                                    prominent
+                                    position on the home page.
+                                </li>
+                                <li>
+                                    As per the design standards the white spacing was maintained which makes the design
+                                    interactive.
+                                </li>
+                                <li>
+                                    The monthly budget tracker with an overview of monthly balance was placed right
+                                    after the expense tracker
+                                    chart
+                                    keeping in mind The Law of Common Region.
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="float-child">
+                            <img src="https://c0.wallpaperflare.com/preview/389/615/630/business-businessman-communication-concept.jpg"
+                                class="img-fluid" alt="Sample image">
+                        </div>
+
+
+                    </div>
+                    <%- include ("../partials/footer")%>

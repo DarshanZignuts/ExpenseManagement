@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { signUp, showUser, loginUser, deleteUser } = require("../contollers/user");
+const { webShow, signUp, showUser, loginUser, deleteUser } = require("../contollers/user");
  
+router.get("/", webShow);
+
 router.post("/signup", signUp);
 
 router.get("/:userId", showUser)
