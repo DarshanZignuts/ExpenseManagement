@@ -31,7 +31,6 @@ async function webShow(req, res) {
     try {
         const { name, email, password } = req.body;
         let user = await User.findOne({ email: email });
-        console.log("user : ", user);
         if (user) {
             return res.status(400).render("pages/login", { result: {message : "you already created an account please login by it...", user : user}});
         } else {
@@ -44,16 +43,17 @@ async function webShow(req, res) {
                         email: email,
                         password: hash
                     });
-                    let user = await User.findOne({ email: email });
                     await newUser.save();
+                    console.log('newUser ::: ', newUser);
+                    let user = await User.findOne({ email: email });
                     let defaultAccount = new Account({
-                        userId: user._id,
+                        userId: newUser._id,
                         name: name+" Default",
                         balance: 0,
-                        member : [name]
-                    })
-
+                        member : [newUser.name]
+                    });
                     await defaultAccount.save();
+                    console.log('DefaultAccount ::: ', defaultAccount);
                     res.status(200).render("pages/login",{ result : {message: " enter your detail here to login...!"}})
                     // return res.status(200).json({
                     //     msg: "User created successfully..."
@@ -118,7 +118,7 @@ async function loginUser(req, res) {
                 return res.status(401).render("login", {result :  { message : "user not Found"}});
             }
             if (result) {
-                const token = await jwt.sign(
+                    const token = await jwt.sign(
                     {
                         email : email,
                         userId : user._id
@@ -128,11 +128,12 @@ async function loginUser(req, res) {
                         expiresIn : "20h"
                     }
                 );
-                return res.status(200).render("pages/home", {result : {token: token, user: user.email}});
+                await User.updateOne({email: email},{$set: {token : token}})
+                console.log('token ::: ', token);
+                return res.status(200).render("pages/home");
             }
             return res.status(401).render("pages/login", {result :  { message : "Please Enter Your Detail To Login "}})
         })
-
     } catch(err) {
         console.log("err in login : ", err);
         res.status(400).json({
@@ -140,7 +141,6 @@ async function loginUser(req, res) {
             error : err
         });
     }
-
 };
 
 /**
@@ -170,5 +170,6 @@ async function loginUser(req, res) {
         }
     }
 }
+
 
 module.exports = { webShow, signUp, showUser, loginUser, deleteUser };

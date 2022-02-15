@@ -21,10 +21,12 @@ mongoose.connect(url, {
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended : false}));
 app.use(bodyParser.json());
+
 app.use('/user', userRoutes);
 app.use('/account', accountRoutes);
 app.use('/transaction', trasactionRoutes);
-    
+
+
     
 app.listen(port, () => {
     console.log('Listenint to the port :', port);

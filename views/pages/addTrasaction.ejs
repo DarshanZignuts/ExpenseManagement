@@ -1,0 +1,82 @@
+<%- include ("../partials/header2")%>
+
+    <!--  Add transaction form  -->
+    <div class="row">
+        <div class="col-md-12">
+            <form action="index.html" method="post">
+                <h1> Add Transaction </h1>
+                <!--a add acount detail -->
+                <fieldset>
+                    <legend><span class="number">1</span> Enter Your Transaction Info</legend>
+                    <label for="name">Name:</label>
+                    <select id="account" name="accountName">
+                        <optgroup label="account">
+                            <option value="Default"> User Default </option>
+                            <option value="addedAccount">created Account</option>
+                        </optgroup>
+                    </select>
+                </fieldset>
+                <!-- add transaction detail -->
+                <fieldset>
+                    <legend><span class="number">2</span> Transaction Details:-></legend>
+                    <br>
+                    <div>
+                        <!--   div for contain transaction type -->
+                        <div class="form-inline">
+                            <label for="Transaction">Transaction Type:</label>
+                        </div>
+                        <div class="form-inline">
+                            <input type="radio" onclick="javascript:yesnoCheck();" name="yesno" id="incomeCheck"
+                                required />
+                            <label for="income">Income</label>
+                        </div>
+                        <div class="form-inline">
+                            <input type="radio" onclick="javascript:yesnoCheck();" name="yesno" id="expenseCheck"
+                                required />
+                            <label for="expense">Expense</label>
+                        </div>
+                        <div class="form-inline">
+                            <input type="radio" onclick="javascript:yesnoCheck();" name="yesno" id="transferCheck"
+                                required />
+                            <label for="accountTransfer">AccountTransfer</label>
+                        </div>
+                    </div>
+                    <div id="incomeDrop" style="display:none">
+                        <select id="transaction" name="type_transaction" required>
+                            <optgroup label="Income">
+                                <option value="salary">Salary</option>
+                                <option value="saleItem">SaleItem</option>
+                                <option value="Other">Other</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div id="expenseDrop" style="display: none;">
+                        <select id="transaction" name="type_transaction" required>
+                            <optgroup label="Expense">
+                                <option value="food">Food</option>
+                                <option value="shopping">Shopping</option>
+                                <option value="homeexpense">HomeExpense</option>
+                                <option value="travaling">Travaling</option>
+                                <option value="tour">Tour</option>
+                                <option value="rent">Rent</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div id="transferDrop" style="display: none;">
+                        <select id="transaction" name="type_transaction" required>
+                            <optgroup label="AccountTransfer">
+                                <option value="yourAccount">Default Account</option>
+                                <option value="AnyMember">Member Account</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <label for="discription">Discription:</label>
+                    <textarea id="discription" name="transactionDescription" required></textarea>
+                    <label for="amount"> Amount</label>
+                    <input type="text" id="amount" pattern="[0-9]*" name="Amount" required>
+                </fieldset>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+    <%- include ("../partials/footer")%>
