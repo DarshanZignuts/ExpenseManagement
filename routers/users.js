@@ -1,15 +1,17 @@
 const express = require("express");
 const router = express.Router();
-const { webShow, signUp, showUser, loginUser, deleteUser } = require("../contollers/user");
+const { getsignup, signUp, getlogin, loginUser, logout, deleteUser } = require("../contollers/user");
  
-router.get("/", webShow);
+router.get("/signup", getsignup);
 
 router.post("/signup", signUp);
 
-router.get("/:userId", showUser)
+router.get("/login", getlogin);
 
-router.post("/login", loginUser)
+router.post("/login", loginUser);
 
-router.delete("/:userId", deleteUser)
+router.post("/logout", logout);
+
+router.delete("/:userId", deleteUser);
 
 module.exports = router;

@@ -16,9 +16,11 @@ const accountSchema = mongoose.Schema({
     //     type : Array,
     //     default : [ { type : mongoose.Schema.Types.ObjectId, ref : "User" } ]
     // },
-    members : {
-        type : Array,
-    },
+    members : [{
+        member : {
+            type : Array
+        }
+    }],
     isDefault : {
         type : Boolean,
         default : false

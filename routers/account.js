@@ -3,37 +3,13 @@ const router = express.Router();
 const Account = require("../models/account");
 const authorise = require("../middleware/check_auth");
 const User = require("../models/user");
+const { getAllAccount, getAddAccount } = require("../contollers/account");
 
-//open account
-router.get("/",  async function (req, res) {
-    try {
-        // let id = await User.findOne(_id) {userId : id}.populate("User")
-        let account = await Account.find();
-        if (!account) {
-            return res.status(400).json({
-                msg: 'someThing wrong to find account detail'
-            });
-        } else {
-            return res.status(200).render("pages/account",{account: account})
-        }
-    } catch (err) {
-        return res.status(400).json({
-            msg: 'someThing wrong to fetch account detail'
-        });
-    }
-});
+router.get("/", authorise, getAllAccount);
 
-router.get("/add", authorise, async function addshow(req, res) {
-    try {
-        res.render("pages/addAccount")
-    } catch (err) {
-        return res.status(400).json({
-            msg: 'Something went wrong!'
-        });
-    }
-})
-// create account
-router.post("/add", authorise, async function (req, res) {
+router.get("/addAccount", authorise, getAddAccount);
+
+router.post("/addAccount", authorise, async function (req, res) {
     try {
         let { userId, name } = req.body;
         let newAccount = new Account({
@@ -56,7 +32,6 @@ router.post("/add", authorise, async function (req, res) {
     }
 });
 
-
 // update account 
 router.patch("/:accountId", authorise, async function (req, res) {
     try {
@@ -67,7 +42,6 @@ router.patch("/:accountId", authorise, async function (req, res) {
             msg: "success",
             account: account
         });
-
     } catch (err) {
         console.log("err in edit account : ", err);
         return res.status(400).json({
@@ -75,7 +49,6 @@ router.patch("/:accountId", authorise, async function (req, res) {
         });
     }
 });
-
 
 // delete account 
 router.delete("/:accountId", authorise, async function (req, res) {

@@ -1,21 +1,29 @@
 <%- include ("../partials/header2")%>
 
 <div class="container text-white" >
- 
- <table class="table center" style="width: 80%; ">
+  <nav class="navbar navbar-light bg-light justify-content-between">
+    <a class="navbar-brand">Account Detail</a>
+    <form class="navform" method="GET" action="/transaction/addTransaction"><a href="./addTrasaction.ejs"><button class="transaction btn btn-outline-warning my-2 my-sm-0"
+      type="submit">AddTransaction</button></a></form>
+  </nav>
+  
+ <table class="table" style="width: 80%; margin: auto; background-color: rgba(34, 189, 255, 0.529);">
     <thead class="thead-dark">
+      
         <h1> Account Details:--></h1>
       <tr>
-        <th scope="col" name="accountName">AccountName</th>
-        <th scope="col" name="balance">Balance</th>
-        <th scope="col" name="action"> Action</th>
+        <th scope="col" name="refId">TransactionID</th>
+        <th scope="col" name="typeCategory">Type/ Category</th>
+        <th scope="col" name="amount">Amount</th>
+        <th scope="col" name="action">Action</th>
       </tr>
     </thead>
     <tbody>
-      <% for ( let i = 0; i < account.length; i++) { %>
+      <% for ( let i = 0; i < transaction.length; i++) { %>
         <tr>
-          <td><%= account[i].name %></td>
-          <td><%= account[i].balance %></td>
+          <td><%= transaction[i].account %></td>
+          <td><%= transaction[i].type / transaction[i].category %></td>
+          <td><%= transaction[i].amount %></td>
           <td>
             <div class="row">
               <div class="col-sm">
@@ -42,6 +50,3 @@
 </div>
 
 <%- include ("../partials/footer")%>
-
-<!-- onclick="return confirm(`are you sure you want to delete?`)" 
-/update/?id= = account[i].id -->

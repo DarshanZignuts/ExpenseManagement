@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const User = require("../models/user");
 const Account = require("../models/account");
 const jwt = require("jsonwebtoken");
+const { cookie } = require('express/lib/response');
 
 /**
  * @param {*} req
@@ -9,9 +10,9 @@ const jwt = require("jsonwebtoken");
  * @description home without login by using get
  * @author `DARSHAN ZignutsTechnolab`
  */
-async function webShow(req, res) {
+async function getsignup(req, res) {
     try {
-            res.render('pages/webshow');
+            res.render('pages/signUp');
 
     } catch (err) {
         return res.status(400).json({
@@ -19,7 +20,6 @@ async function webShow(req, res) {
         });
     }
 }
-
 
 /**
  * @param {*} req
@@ -48,7 +48,7 @@ async function webShow(req, res) {
                     let user = await User.findOne({ email: email });
                     let defaultAccount = new Account({
                         userId: newUser._id,
-                        name: name+" Default",
+                        name: +" Default",
                         balance: 0,
                         member : [newUser.name]
                     });
@@ -76,20 +76,9 @@ async function webShow(req, res) {
  * @description show userCreated in user by using get
  * @author `DARSHAN ZignutsTechnolab`
  */
- async function showUser (req, res) {
+ async function getlogin (req, res) {
     try {
-        let id = await User.findOne({ _id: req.params.userId });
-        if (id) {
-            console.log("findOne data ::: ", id);
-            res.status(200).json({
-                msg: "success ....",
-                data: id
-            })
-        } else {
-            res.status(400).json({
-                msg: "data not found ...."
-            })
-        }
+        res.render('pages/login', { result : {message : "Enter Your Login Detail"}});
     } catch (err) {
         console.log("error : ", err);
         res.status(400).json({
@@ -128,8 +117,15 @@ async function loginUser(req, res) {
                         expiresIn : "20h"
                     }
                 );
+                // return res.status(200).render("pages/home", {result : {token: token, user: user.email}});
                 await User.updateOne({email: email},{$set: {token : token}})
                 console.log('token ::: ', token);
+
+                res.cookie("jwt", token, { 
+                    expires : new Date(Date.now()+ 3000000),
+                    httponly: true
+                });
+                console.log('cookies ::: > > > ', cookie);
                 return res.status(200).render("pages/home");
             }
             return res.status(401).render("pages/login", {result :  { message : "Please Enter Your Detail To Login "}})
@@ -142,6 +138,22 @@ async function loginUser(req, res) {
         });
     }
 };
+
+/**
+ * @param {*} req
+ * @param {*} res
+ * @description logout user by using delete to remove token
+ * @author `DARSHAN ZignutsTechnolab`
+ */
+async function logout(req, res) {
+    try {
+        res.send('logout');
+    } catch (err) {
+        return res.status(400).json({
+            msg : 'Something went wrong!'
+        });
+    }
+}
 
 /**
  * @param {*} req
@@ -172,4 +184,4 @@ async function loginUser(req, res) {
 }
 
 
-module.exports = { webShow, signUp, showUser, loginUser, deleteUser };
+module.exports = { getsignup, signUp, getlogin, loginUser, logout, deleteUser };

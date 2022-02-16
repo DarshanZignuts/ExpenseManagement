@@ -1,12 +1,16 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const Account = require('../models/account');
 
-module.exports = (req, res, next) => {
+module.exports = async(req, res, next) => {
     try{
-        const token = req.headers.authorization.split(" ")[1];
+        const token = req.cookies.jwt;
         const decoded = jwt.verify(token, 'secretKey');
         console.log('heyy decoded :::',decoded);
-        req.userData= decoded;
+        const user =  await User.findOne({token : token});
+        const account = await Account.find({userId : user._id});
+        console.log('account :: ><>', account);
+        res.locals.account = account;
         next();
     }catch(err){
         return res.status(400).json({

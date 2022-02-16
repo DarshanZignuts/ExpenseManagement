@@ -17,13 +17,10 @@
 
 <body>
     <% if (result.message){%>
-        <div id="login-alert-error" class="alert alert-danger" role="alert">
+        <div class="alert alert-danger" role="alert" style="margin: 0;">
             <h1>
                 <%= result.message %>
             </h1>
-            <button class="exit-alert-button" type="button" name="button">
-                &times;
-            </button>
         </div>
         <% } else if (!user){ %>
             <p>
