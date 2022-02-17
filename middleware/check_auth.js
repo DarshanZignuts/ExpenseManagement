@@ -10,6 +10,7 @@ module.exports = async(req, res, next) => {
         const user =  await User.findOne({token : token});
         const account = await Account.find({userId : user._id});
         console.log('account :: ><>', account);
+        req.userData = decoded;
         res.locals.account = account;
         next();
     }catch(err){

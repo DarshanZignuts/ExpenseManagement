@@ -1,36 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const Transaction = require("../models/transaction");
-const Account = require("../models/account");
-const { getAllTransaction, getAddTransaction } = require("../contollers/transaction");
+const authorise = require("../middleware/check_auth");
+const { getAllTransaction, getAddTransaction, addTransaction, getUpdateTransaction, updateTransaction, deleteTransaction } = require("../contollers/transaction");
 
 
-router.get("/:accountId", getAllTransaction);
+router.get("/id/:accountId", authorise, getAllTransaction);
 
-router.get("/addTransaction", getAddTransaction);
+router.get("/addTransaction",authorise, getAddTransaction);
 
-router.post("/:accountId", async function(req, res) {
-    try {
-        let { account, type, category, amount, to } = req.body;
-        let newTransaction = new Transaction({
-            account : account,
-            type : type,
-            category : category,
-            amount : amount,
-            to : to
-        });
-        await newTransaction.save();
+router.post("/addTransaction", authorise, addTransaction);
 
-        return res.status(200).json({
-            msg : "success",
-            data : newTransaction
-        });
+router.get("/updateTransaction", authorise, getUpdateTransaction);
 
-    } catch (err) {
-        return res.status(400).json({
-            msg : 'Something went wrong!'
-        });
-    }
-});
+router.patch("/updateTransaction", authorise, updateTransaction);
+
+router.delete("/deleteTransaction", authorise , deleteTransaction);
 
 module.exports = router;

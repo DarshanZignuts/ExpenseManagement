@@ -43,14 +43,15 @@ async function getsignup(req, res) {
                         email: email,
                         password: hash
                     });
-                    await newUser.save();
-                    console.log('newUser ::: ', newUser);
-                    let user = await User.findOne({ email: email });
+                    newUser = await newUser.save();
+
+                    
                     let defaultAccount = new Account({
                         userId: newUser._id,
-                        name: +" Default",
+                        name: name+" Default",
                         balance: 0,
-                        member : [newUser.name]
+                        members : [newUser._id],
+                        isDefault : true
                     });
                     await defaultAccount.save();
                     console.log('DefaultAccount ::: ', defaultAccount);
@@ -147,7 +148,7 @@ async function loginUser(req, res) {
  */
 async function logout(req, res) {
     try {
-        res.send('logout');
+        res.render("pages/login",{result: { message : "You logout From Expense"}})
     } catch (err) {
         return res.status(400).json({
             msg : 'Something went wrong!'

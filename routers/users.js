@@ -10,7 +10,7 @@ router.get("/login", getlogin);
 
 router.post("/login", loginUser);
 
-router.post("/logout", logout);
+router.get("/logout", logout);
 
 router.delete("/:userId", deleteUser);
 
