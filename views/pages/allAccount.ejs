@@ -8,13 +8,7 @@
     </nav>
     <table class="table" style="width: 80%; margin: auto; background-color: white;">
       <thead class="thead-dark">
-        <% if (msg){ %>
-          <div class="alert alert-danger" role="alert" style="margin: 0;">
-            <h1>
-                <%= msg %>
-            </h1>
-        </div>
-        <% } %>
+        
         <h1> Account Details:--></h1>
         <tr>
           <th scope="col" name="accountName">AccountName</th>
@@ -62,15 +56,16 @@
     </table>
   </div>
 
-  <script>
-    function openForm() {
-      document.getElementById("myForm").style.display = "block";
+  <script type="text/javascript">      
+    showAlert = function() {
+      return alert("you can not delete default Acccount!!");
     }
-
-    function closeForm() {
-      document.getElementById("myForm").style.display = "none";
+    console.log("msg ::: <><>", "<%= msg %>")
+    if("<%= msg %>"=="default") 
+    {  
+      showAlert();
     }
-  </script>
+    </script>
   <%- include ("../partials/footer")%>
 
     

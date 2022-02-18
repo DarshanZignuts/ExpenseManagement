@@ -14,7 +14,7 @@ async function getAllAccount(req, res) {
         const { account } = res.locals;
         if (account) {
             console.log('account detail ::: > > >', account);
-            return res.status(200).render("pages/allAccount", { account: account });
+            return res.status(200).render("pages/allAccount", { account: account, msg : null });
         }
         else {
             return res.status(400).json({
@@ -64,8 +64,8 @@ async function addAccount(req, res) {
         });
         await add.save();
 
-        const account = await Account.find({ userId: id });
-        res.render("pages/allAccount", { account ,msg });
+        const accounts = await Account.find({ userId: id });
+        res.render("pages/allAccount", { account: accounts, msg : null });
     } catch (err) {
         console.log('err ::: <><>', err);
         return res.status(400).json({
@@ -84,7 +84,7 @@ async function getUpdateAccount(req, res) {
     try {
         const id  =  req.params.id;
         const account =  await Account.findOne({_id: id});
-        res.render("pages/update",{account : account});
+        res.render("pages/update",{account : account, msg : null});
     } catch (err) {
         return res.status(400).json({
             msg: 'Something went wrong!'
@@ -107,7 +107,7 @@ async function updateAccount(req, res) {
         let data =  await Account.find({userId : update.userId});
         if(data){
             console.log('account detail ::: > > >', data);
-            return res.status(200).render("pages/allAccount", { account: data });
+            return res.status(200).render("pages/allAccount", { account: data, msg : null});
         }
         else {
             return res.status(400).json({
@@ -135,7 +135,7 @@ async function deleteAccount(req, res) {
             res.redirect("/account" );
         }
         else{
-            return res.render("pages/allAccount",{msg : "you can not delete default Acccount!!"});
+            return res.render("pages/allAccount",{msg : "default"});
         }
     } catch (err) {
         return res.status(400).json({

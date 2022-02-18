@@ -6,16 +6,7 @@
             <form action="addTransaction" method="post">
                 <h1> Add Transaction </h1>
                 <!--a add acount detail -->
-                <fieldset>
-                    <legend><span class="number">1</span> Enter Your Transaction Info</legend>
-                    <label for="name">Name:</label>
-                    <select id="account" name="accountName">
-                        <optgroup label="account">
-                            <option value="Default"> User Default </option>
-                            <option value="addedAccount">created Account</option>
-                        </optgroup>
-                    </select>
-                </fieldset>
+
                 <!-- add transaction detail -->
                 <fieldset>
                     <legend><span class="number">2</span> Transaction Details:-></legend>
@@ -42,6 +33,8 @@
                         </div>
                     </div>
                     <div id="incomeDrop" style="display:none">
+                        <label for="from">From</label>
+                        <!-- <input type="text" value="" name="from"> -->
                         <select id="transaction" name="type_transaction" required>
                             <optgroup label="Income">
                                 <option value="salary">Salary</option>
@@ -49,8 +42,15 @@
                                 <option value="Other">Other</option>
                             </optgroup>
                         </select>
+                        <label for="to">To</label>
+                        <input type="text" value="defaultAccount" name="to" readonly>
+
                     </div>
                     <div id="expenseDrop" style="display: none;">
+
+                        <label for="from">From</label>
+                        <input type="text" value="defaultAccount" name="from" readonly>
+                        <label for="to">To</label>
                         <select id="transaction" name="type_transaction" required>
                             <optgroup label="Expense">
                                 <option value="food">Food</option>
@@ -61,15 +61,29 @@
                                 <option value="rent">Rent</option>
                             </optgroup>
                         </select>
+
+
+                        <!-- <input type="text" value="" name="to"> -->
                     </div>
                     <div id="transferDrop" style="display: none;">
-                        <select id="transaction" name="type_transaction" required>
-                            <optgroup label="AccountTransfer">
+                        <label for="from">From</label>
+                        <select id="transaction" name="from" required>
+                            <optgroup label="From AccountTransfer">
                                 <option value="yourAccount">Default Account</option>
                                 <option value="AnyMember">Member Account</option>
                             </optgroup>
                         </select>
+                        <label for="to">To</label>
+                        <select id="transaction" name="to" required>
+                            <optgroup label="To AccountTransfer">
+                                <option value="yourAccount">Default Account</option>
+                                <option value="AnyMember">Member Account</option>
+                            </optgroup>
+                        </select>
+
                     </div>
+                    <div></div>
+
                     <label for="discription">Discription:</label>
                     <textarea id="discription" name="transactionDescription" required></textarea>
                     <label for="amount"> Amount</label>

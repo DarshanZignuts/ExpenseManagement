@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { getsignup, signUp, getlogin, loginUser, logout, deleteUser } = require("../contollers/user");
+const authorise = require("../middleware/check_auth");
+
  
 router.get("/signup", getsignup);
 
@@ -10,7 +12,7 @@ router.get("/login", getlogin);
 
 router.post("/login", loginUser);
 
-router.get("/logout", logout);
+router.get("/logout",authorise, logout);
 
 router.delete("/:userId", deleteUser);
 

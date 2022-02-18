@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const User = require("../models/user");
 const Account = require("../models/account");
 const jwt = require("jsonwebtoken");
+const nodemailer = require('nodemailer');
 const { cookie } = require('express/lib/response');
 
 /**
@@ -12,11 +13,11 @@ const { cookie } = require('express/lib/response');
  */
 async function getsignup(req, res) {
     try {
-            res.render('pages/signUp');
+        res.render('pages/signUp');
 
     } catch (err) {
         return res.status(400).json({
-            msg : 'Something went wrong!'
+            msg: 'Something went wrong!'
         });
     }
 }
@@ -27,12 +28,12 @@ async function getsignup(req, res) {
  * @description signUp for user by using post
  * @author `DARSHAN ZignutsTechnolab`
  */
- async function signUp(req, res) {
+async function signUp(req, res) {
     try {
         const { name, email, password } = req.body;
         let user = await User.findOne({ email: email });
         if (user) {
-            return res.status(400).render("pages/login", { result: {message : "you already created an account please login by it...", user : user}});
+            return res.status(400).render("pages/login", { result: { message: "you already created an account please login by it...", user: user } });
         } else {
             bcrypt.hash(password, 10, async (err, hash) => {
                 if (err) {
@@ -45,30 +46,50 @@ async function getsignup(req, res) {
                     });
                     newUser = await newUser.save();
 
-                    
                     let defaultAccount = new Account({
                         userId: newUser._id,
-                        name: name+" Default",
+                        name: name + " Default",
                         balance: 0,
-                        members : [newUser._id],
-                        isDefault : true
+                        members: [newUser._id],
+                        isDefault: true
                     });
+
                     await defaultAccount.save();
-                    console.log('DefaultAccount ::: ', defaultAccount);
-                    res.status(200).render("pages/login",{ result : {message: " enter your detail here to login...!"}})
-                    // return res.status(200).json({
-                    //     msg: "User created successfully..."
-                    // });
-                }
+
+                    let transporter = nodemailer.createTransport({
+                        host: "smtp.mailtrap.io",
+                        port: 2525,
+                        secure: false, // true for 465, false for other ports
+                        auth: {
+                            user: "a5cee4b85d8781", // generated ethereal user
+                            pass: "64d75fc684958b", // generated ethereal password
+                        },
+                        tls:{
+                            rejectUnauthorized:false
+                        }
+                    });
+
+                    let info = await transporter.sendMail({
+                        from: '"ExpenseManager" <test@expensemanager.com>', // sender address
+                        to: req.body.email, // list of receivers
+                        subject: "welcome mail", // Subject line
+                        text: "hey welcome to expense manager thank you to create an accont to our web", // plain text body
+                        html: "<b>hello user</b>", // html body
+                    });
+
+                    console.log("Message To : %s", info.to);
+                    // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+                res.status(200).render("pages/login", { result: { message: " enter your detail here to login...!" } })
+            }
             });
-        }
-    } catch (err) {
-        console.log("error : ", err);
-        res.status(400).json({
-            msg: "error ....",
-            error: err
-        })
     }
+    } catch (err) {
+    console.log("error : ", err);
+    res.status(400).json({
+        msg: "error ....",
+        error: err
+    })
+}
 }
 
 /**
@@ -77,9 +98,9 @@ async function getsignup(req, res) {
  * @description show userCreated in user by using get
  * @author `DARSHAN ZignutsTechnolab`
  */
- async function getlogin (req, res) {
+async function getlogin(req, res) {
     try {
-        res.render('pages/login', { result : {message : "Enter Your Login Detail"}});
+        res.render('pages/login', { result: { message: "Enter Your Login Detail" } });
     } catch (err) {
         console.log("error : ", err);
         res.status(400).json({
@@ -98,44 +119,44 @@ async function getsignup(req, res) {
 async function loginUser(req, res) {
     try {
         const { email, password } = req.body;
-        let user = await User.findOne({ email : email });
+        let user = await User.findOne({ email: email });
         if (!user) {
-            return res.status(401).render("pages/login", {result :  { message : "user not Found"}})
+            return res.status(401).render("pages/login", { result: { message: "user not Found" } })
         }
         bcrypt.compare(password, user.password, async (err, result) => {
             if (err) {
 
-                return res.status(401).render("login", {result :  { message : "user not Found"}});
+                return res.status(401).render("login", { result: { message: "user not Found" } });
             }
             if (result) {
-                    const token = await jwt.sign(
+                const token = await jwt.sign(
                     {
-                        email : email,
-                        userId : user._id
+                        email: email,
+                        userId: user._id
                     },
                     "secretKey",
                     {
-                        expiresIn : "20h"
+                        expiresIn: "20h"
                     }
                 );
                 // return res.status(200).render("pages/home", {result : {token: token, user: user.email}});
-                await User.updateOne({email: email},{$set: {token : token}})
+                await User.updateOne({ email: email }, { $set: { token: token } })
                 console.log('token ::: ', token);
 
-                res.cookie("jwt", token, { 
-                    expires : new Date(Date.now()+ 3000000),
+                res.cookie("jwt", token, {
+                    expires: new Date(Date.now() + 3000000000),
                     httponly: true
                 });
                 console.log('cookies ::: > > > ', cookie);
                 return res.status(200).render("pages/home");
             }
-            return res.status(401).render("pages/login", {result :  { message : "Please Enter Your Detail To Login "}})
+            return res.status(401).render("pages/login", { result: { message: "Please Enter Your Detail To Login " } })
         })
-    } catch(err) {
+    } catch (err) {
         console.log("err in login : ", err);
         res.status(400).json({
-            msg : "Unable to login, something went wrong!",
-            error : err
+            msg: "Unable to login, something went wrong!",
+            error: err
         });
     }
 };
@@ -148,10 +169,11 @@ async function loginUser(req, res) {
  */
 async function logout(req, res) {
     try {
-        res.render("pages/login",{result: { message : "You logout From Expense"}})
+        res.clearCookie("jwt");
+        res.render("pages/login", { result: { message: "You logout From Expense" } })
     } catch (err) {
         return res.status(400).json({
-            msg : 'Something went wrong!'
+            msg: 'Something went wrong!'
         });
     }
 }
@@ -162,7 +184,7 @@ async function logout(req, res) {
  * @description user delete in user by using delete
  * @author `DARSHAN ZignutsTechnolab`
  */
- async function deleteUser(req, res) {
+async function deleteUser(req, res) {
     try {
         let id = req.params.userId;
         let user = await User.remove({ _id: id })

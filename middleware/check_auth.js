@@ -11,11 +11,10 @@ module.exports = async(req, res, next) => {
         const account = await Account.find({userId : user._id});
         console.log('account :: ><>', account);
         req.userData = decoded;
+        req.token = token;
         res.locals.account = account;
         next();
     }catch(err){
-        return res.status(400).json({
-            message: 'auth failed...!.'
-        })
+        return res.status(400).render("pages/login",{result: {message : "Please login By Your Mail"}});
     }
 };
