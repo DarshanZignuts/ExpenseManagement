@@ -51,7 +51,7 @@ async function getAddTransaction(req, res) {
 */
 async function addTransaction(req, res) {
     try {
-    
+        console.log('req body ::::>>>>', req.body);
     res.send(' addTransaction work in progress...');
     } catch (err) {
         return res.status(400).json({
