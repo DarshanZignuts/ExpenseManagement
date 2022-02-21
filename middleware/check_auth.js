@@ -9,9 +9,10 @@ module.exports = async(req, res, next) => {
         console.log('heyy decoded :::',decoded);
         const user =  await User.findOne({token : token});
         const account = await Account.find({userId : user._id});
-        console.log('account :: ><>', account);
+        // console.log('account :: ><>', account);
         req.userData = decoded;
         req.token = token;
+        res.locals.user = user;
         res.locals.account = account;
         next();
     }catch(err){

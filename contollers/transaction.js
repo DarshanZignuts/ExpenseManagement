@@ -12,13 +12,17 @@ const Transaction = require("../models/transaction");
 async function getAllTransaction(req, res) {
     try {
         let accountId = req.params.accountId;
+        let { account, user } = res.locals; // done
+        // let member = { _id : account.name, email: user.email };
         let transactions = await Transaction.find({ account: accountId });
         if (!transactions) {
             return res.status(400).json({
                 msg: "no data availabale"
             });
         } else {
-            res.render("pages/transaction", {transaction: transactions})
+            const memberData = await Account.find({_id : accountId}, {});
+            console.log('members <<<<<>>>>>', memberData );
+            res.render("pages/transaction", { transaction: transactions, account: memberData });
         }
     } catch (err) {
         return res.status(400).json({
@@ -35,10 +39,10 @@ async function getAllTransaction(req, res) {
  */
 async function getAddTransaction(req, res) {
     try {
-     res.render("pages/addTransaction")
+        res.render("pages/addTransaction")
     } catch (err) {
         return res.status(400).json({
-            msg : 'Something went wrong!'
+            msg: 'Something went wrong!'
         });
     }
 }
@@ -52,10 +56,10 @@ async function getAddTransaction(req, res) {
 async function addTransaction(req, res) {
     try {
         console.log('req body ::::>>>>', req.body);
-    res.send(' addTransaction work in progress...');
+        res.send(' addTransaction work in progress...');
     } catch (err) {
         return res.status(400).json({
-            msg : 'Something went wrong!'
+            msg: 'Something went wrong!'
         });
     }
 }
@@ -66,12 +70,12 @@ async function addTransaction(req, res) {
  * @description getUpdateTransaction Detail by using get
  * @author `DARSHAN ZignutsTechnolab`
  */
- async function getUpdateTransaction(req, res) {
+async function getUpdateTransaction(req, res) {
     try {
-     res.send("getUpdateTransaction work in progress...");
+        res.send("getUpdateTransaction work in progress...");
     } catch (err) {
         return res.status(400).json({
-            msg : 'Something went wrong!'
+            msg: 'Something went wrong!'
         });
     }
 }
@@ -87,7 +91,7 @@ async function updateTransaction(req, res) {
         res.send(" updateTransaction work in progress...");
     } catch (err) {
         return res.status(400).json({
-            msg : 'Something went wrong!'
+            msg: 'Something went wrong!'
         });
     }
 }
@@ -98,14 +102,14 @@ async function updateTransaction(req, res) {
  * @description deleteTransaction Detail by using delete
  * @author `DARSHAN ZignutsTechnolab`
  */
- async function deleteTransaction(req, res) {
+async function deleteTransaction(req, res) {
     try {
         res.send(" deleteTransaction work in progress...");
     } catch (err) {
         return res.status(400).json({
-            msg : 'Something went wrong!'
+            msg: 'Something went wrong!'
         });
     }
 }
 
-    module.exports = { getAllTransaction, getAddTransaction, addTransaction, getUpdateTransaction, updateTransaction, deleteTransaction };
+module.exports = { getAllTransaction, getAddTransaction, addTransaction, getUpdateTransaction, updateTransaction, deleteTransaction };

@@ -5,11 +5,12 @@
       <a class="navbar-brand">Account Detail</a>
       <form class="navform" method="GET" action="/transaction/addTransaction"><a href=""><button
             class="transaction btn btn-outline-warning my-2 my-sm-0" type="submit">AddTransaction</button></a></form>
+
     </nav>
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="col-lg-7 col-xl-8">
-        <table class="table" style="width: 100%; margin: auto; background-color: rgba(34, 189, 255, 0.529);">
-          <thead class="thead-dark">
+        <table class="table " style="width: 100%; margin-top : 0; background-color: white;">
+          <thead class="thead-dark text-center">
 
             <h1> Account Details</h1>
             <tr>
@@ -20,6 +21,9 @@
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td>efcsuvbhj</td>
+            </tr>
             <% for ( let i=0; i < transaction.length; i++) { %>
               <tr>
                 <td>
@@ -61,46 +65,38 @@
           </tbody>
         </table>
       </div>
-      <div class="col-lg-3 col-xl-4">
-        <table class="table" style="width: 100%; margin: auto; background-color: rgba(34, 189, 255, 0.529);">
+      <div class="col-lg-2 col-xl-3">
+        <table class="table text-center" style="width: 100%; margin-top: 0; background-color: wheat;">
           <thead class="thead-dark">
-
-            <h1> Members</h1>
-            <tr>
-              <th scope="col" name="refId">memberName</th>
-              <th scope="col" name="action"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                  fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                  <path
-                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                  <path fill-rule="evenodd"
-                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                </svg></th>
-            </tr>
+            <% for ( let i=0; i < account.length ; i++) { %>
+              <button class="member" value="" id="updateBtn">
+                <a href="/account/addMember/<%= account[i]._id%>"> Add Member</a></button>
+              <h1> Members</h1>
+              <tr>
+                <th scope="col" name="refId">memberName</th>
+                <th scope="col" name="action">&times</th>
+              </tr>
           </thead>
           <tbody>
-            <%# for ( let i=0; i < member.length; i++) { %>
-              <tr>
-                <td>fvdjs
-                  <%#=member[i].userid %>
+            <tr>
+              <% for (let j=0; j< account[i].members.length ; j++) {%>
+                <td>
+                  <%=account[i].members[j].name %>
                 </td>
                 <td>
-                  <div class="row">
-                    <div class="col-sm-1">
-                      <button class="accountBtn" value="" id="deleteBtn"> <a
-                          href="http://localhost:3000/<%# = account[i].id %>">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-trash" viewBox="0 0 16 16">
-                            <path
-                              d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                            <path fill-rule="evenodd"
-                              d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                          </svg></a>
-                      </button>
-                    </div>
+             
+                <div class="row">
+                  <div class="col-sm-1">
+                    <button class="accountBtn" value="" id="deleteBtn"> <a
+                        href="http://localhost:3000/account/deleteMember/<%= account[i].members[j]._id %>">
+                        &times</a>
+                    </button>
                   </div>
-                </td>
-              </tr>
-              <%# } %>
+                </div>
+              </td>
+            </tr>
+            <% } %>
+              <% } %>
           </tbody>
         </table>
       </div>

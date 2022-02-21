@@ -45,17 +45,14 @@ async function signUp(req, res) {
                         password: hash
                     });
                     newUser = await newUser.save();
-
                     let defaultAccount = new Account({
                         userId: newUser._id,
                         name: name + " Default",
                         balance: 0,
-                        members: [newUser._id],
+                        members: [{name : newUser.name, email: newUser.email, isDefault: true}],
                         isDefault: true
                     });
-
                     await defaultAccount.save();
-
                     let transporter = nodemailer.createTransport({
                         host: "smtp.mailtrap.io",
                         port: 2525,

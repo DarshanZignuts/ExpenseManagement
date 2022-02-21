@@ -28,15 +28,15 @@ app.use('/user', userRoutes);
 app.use('/account', accountRoutes);
 app.use('/transaction', trasactionRoutes);
 
-// app.get("/", async function addtransaction(req, res) {
-//     try {
-//         res.render("pages/")
-//     } catch (err) {
-//         return res.status(400).json({
-//             msg : 'Something went wrong!'
-//         });
-//     }
-// })
+app.get("/", async function home (req, res) {
+    try {
+        res.render("pages/web");
+    } catch (err) {
+        return res.status(400).json({
+            msg : 'Something went wrong!'
+        });
+    }
+})
     
 app.listen(port, () => {
     console.log('Listenint to the port :', port);
