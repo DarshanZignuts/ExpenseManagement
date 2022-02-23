@@ -3,7 +3,7 @@
   <div class="float-container text-white">
     <nav class="navbar navbar-light bg-light justify-content-between">
       <a class="navbar-brand">Account Detail</a>
-      <form class="navform" method="GET" action="/transaction/addTransaction"><a href=""><button
+      <form class="navform" method="GET" action="/transaction/addTransaction/id/<%= accountId %>"><a href=""><button
             class="transaction btn btn-outline-warning my-2 my-sm-0" type="submit">AddTransaction</button></a></form>
 
     </nav>
@@ -14,23 +14,24 @@
 
             <h1> Account Details</h1>
             <tr>
+              <th scope="col" name="type">Type</th>
               <th scope="col" name="refId">TransactionID</th>
-              <th scope="col" name="typeCategory">Type/ Category</th>
+              <th scope="col" name="category">Category</th>
               <th scope="col" name="amount">Amount</th>
               <th scope="col" name="action">Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>efcsuvbhj</td>
-            </tr>
             <% for ( let i=0; i < transaction.length; i++) { %>
               <tr>
                 <td>
-                  <%= transaction[i].account %>
+                  <%= transaction[i].type %>
                 </td>
                 <td>
-                  <%= transaction[i].type / transaction[i].category %>
+                  <%= transaction[i]._id %>
+                </td>
+                <td>
+                  <%= transaction[i].discription %>
                 </td>
                 <td>
                   <%= transaction[i].amount %>
@@ -48,7 +49,7 @@
                     </div>
                     <div class="col-sm">
                       <button class="accountBtn" value="" id="deleteBtn"> <a
-                          href="http://localhost:3000/<%= account[i].id %>">
+                          href="http://localhost:3000/<%= transaction[i].id %>">
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-trash" viewBox="0 0 16 16">
                             <path
@@ -70,7 +71,7 @@
           <thead class="thead-dark">
             <% for ( let i=0; i < account.length ; i++) { %>
               <button class="member" value="" id="updateBtn">
-                <a href="/account/addMember/<%= account[i]._id%>"> Add Member</a></button>
+                <a href="/account/addMember/<%= accountId%>"> Add Member</a></button>
               <h1> Members</h1>
               <tr>
                 <th scope="col" name="refId">memberName</th>
@@ -103,5 +104,23 @@
 
     </div>
   </div>
-
+  
+  <script type="text/javascript">      
+    showAlready = function() {
+      return alert("Member Already In Account Group!!! ");
+    }
+    showDefault = function() {
+      return alert("you can not delete default Acccount!!");
+    }
+    console.log("message ::: <><>", "<%= message %>")
+    if("<%= message %>"=="already") 
+    {  
+      showAlready();
+    }    
+    if("<%= message %>"=="default") 
+    {  
+      showDefault();
+    }
+    </script>
+    </script>
   <%- include ("../partials/footer")%>

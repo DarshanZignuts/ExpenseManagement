@@ -8,9 +8,9 @@ const transactionSchema = mongoose.Schema({
     },
     type : {
         type : String,
-        enum: ['income', 'expense', "transferToAccount"]
+        enum: ['Income', 'Expense', "TransferToAccount"]
     },
-    category : {
+    discription : {
         type : String,
         default : "others"
     },

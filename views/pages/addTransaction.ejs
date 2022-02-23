@@ -3,7 +3,7 @@
     <!--  Add transaction form  -->
     <div class="row">
         <div class="col-md-12">
-            <form action="addTransaction" method="post">
+            <form action="/transaction/addTransaction/id/<%= accountId%>" method="post">
                 <h1> Add Transaction </h1>
                 <!--a add acount detail -->
 
@@ -18,8 +18,8 @@
                         </div>
                         <div class="form-inline">
                             <input type="radio" onclick="javascript:yesnoCheck();" name="yesno" id="incomeCheck" value="income"
-                                required />
-                            <label for="income">Income</label>
+                                required />income
+                            <!-- <label for="income">Income</label> -->
                         </div>
                         <div class="form-inline">
                             <input type="radio" onclick="javascript:yesnoCheck();" name="yesno" id="expenseCheck" value="expense"

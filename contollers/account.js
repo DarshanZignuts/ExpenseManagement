@@ -2,7 +2,8 @@ const User = require("../models/user");
 const Account = require("../models/account");
 const Transaction = require("../models/transaction");
 const mongoose = require("mongoose");
-const { redirect } = require("express/lib/response");
+const nodemailer = require('nodemailer');
+
 
 /**
  * @param {*} req
@@ -62,7 +63,7 @@ async function addAccount(req, res) {
         const add = new Account({
             userId: id,
             name: name,
-            members: [{ name: user.name, email: user.email, isDefault: true }]
+            members: [{ name: user.name, email: user.email, isAdmin: true }]
         });
         await add.save();
 
@@ -144,7 +145,7 @@ async function getAddMember(req, res) {
 /**
  * @param {*} req
  * @param {*} res
- * @description updateAccount Detail by using patch
+ * @description addMember Detail by using patch
  * @author `DARSHAN ZignutsTechnolab`
  */
 async function addMember(req, res) {
@@ -152,18 +153,41 @@ async function addMember(req, res) {
         const { account } = res.locals;
         let { id, mName, mEmail } = req.body;
         let member = { name: mName, email: mEmail };
-        const find = await Account.findOne({ _id: id }, { "members.email": mEmail });
-        console.log('find :::<<><< ', find);
-        if (!find) {
+        let data = await Account.findOne({ _id: id });
+        let members = data.members;
+        console.log('members ::: ', members);
+        let check = false;
+        for (let i = 0; i < members.length; i++) {
+            if (members[i].email == mEmail) {
+                check = true;
+                break;
+            }
+        }
+        if (check == false) {
             const update = await Account.findOneAndUpdate({ _id: id }, { $push: { "members": member } });
             await update.save();
-            res.redirect("/transaction/id/" + id);
-        }
-        else{
-            res.redirect("/transaction/id/" + id);
+            var transporter = await nodemailer.createTransport({
+                host: "smtp.mailtrap.io",
+                port: 2525,
+                auth: {
+                  user: "a5cee4b85d8781",
+                  pass: "64d75fc684958b"
+                }
+              });
+              let info = await transporter.sendMail({
+                from: '"<smtp.mailtrap.io>', // sender address
+                to: mEmail, // list of receivers
+                subject: "Hello ", // Subject line
+                text: "You are added in account group By expense manager user signup to join them and enjoy it..!!! ", // plain text body
+                html: "<b>Welcome To Expense Manager</b>", // html body
+              });
+            return res.redirect("/transaction/id/" + id);
+        } else {
+            let transactions = await Transaction.find({ account: id });
+            const memberData = await Account.find({ _id: id }, {});
+            res.render("pages/transaction", { transaction: transactions, accountId: id, account: memberData, message: "already" });
         }
         // console.log(' member added  ;;;; ', update);
-
     } catch (err) {
         return res.status(400).json({
             msg: 'Something went wrong!'
@@ -181,24 +205,35 @@ async function addMember(req, res) {
 async function deleteMember(req, res) {
     try {
         const { account, user } = res.locals;
-        let data = await Account.findOne({ "members._id": req.params.id });
-        let email = await Account.findOne({ "members.email": req.userData.email });
-        if (email != req.userData.email) {
-            console.log('member id foundeed   buybewubgduf>>>>> ', member);
-            if ("account.members.isDefault" !== true) {
-                const update = await Account.findOneAndUpdate({ "members._id": req.params.id }, { $pull: { "members": { _id: member } } });
-                console.log('update <<<<>>>> ', update);
-                await update.save();
-                res.redirect("/transaction/id/" + update._id);
-            }
-            else {
-                const update = await Account.findOne({ "members._id": req.params.id });
-                return res.redirect("/transaction/id/" + update._id);
+        const id = req.params.id;
+        console.log('id ', id);
+        const data = await Account.findOne({ "members._id" : id  })
+        console.log('account detail in delete members ::: ><><>< ', data);
+        let members = data.members;
+        console.log('members ::: ', members);
+        let check = false;
+        for (let i = 0; i < members.length; i++) {
+            // console.log('member detail :: ', members[i]);
+            if (members[i]._id == id) {
+                console.log('check after id check  ::: ', check);
+                if (members[i].isAdmin == false) {
+                    check = true;
+                    break;
+                }
             }
         }
+        console.log('check  ::: ', check);
+        if (check == true) {
+            const update = await Account.findOneAndUpdate({ _id: data._id }, { $pull: { "members": { _id: id } } });
+            await update.save();
+            let transactions = await Transaction.find({ account: data._id });
+            const memberData = await Account.find({ _id: data._id }, {});
+            res.render("pages/transaction", { transaction: transactions, accountId: data._id, account: memberData, message: "already" });
+        }
         else {
-            res.redirect("/transaction/id/" + req.userData.userId);
-            // return res.render("pages/transaction", {transaction: transaction, msg: "default" });
+            let transactions = await Transaction.find({ account: data._id });
+            const memberData = await Account.find({ _id: data._id }, {});
+            res.render("pages/transaction", { transaction: transactions, accountId: data._id, account: memberData, message: "already" });
         }
     } catch (err) {
         return res.status(400).json({

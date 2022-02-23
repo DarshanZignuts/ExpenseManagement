@@ -49,7 +49,7 @@ async function signUp(req, res) {
                         userId: newUser._id,
                         name: name + " Default",
                         balance: 0,
-                        members: [{name : newUser.name, email: newUser.email, isDefault: true}],
+                        members: [{name : newUser.name, email: newUser.email, isAdmin: true}],
                         isDefault: true
                     });
                     await defaultAccount.save();
