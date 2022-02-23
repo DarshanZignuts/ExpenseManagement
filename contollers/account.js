@@ -58,7 +58,7 @@ async function getAddAccount(req, res) {
 async function addAccount(req, res) {
     try {
         const name = req.body.name;
-        const { user } = res.locals;
+        const { account, user } = res.locals;
         let id = mongoose.Types.ObjectId(req.userData.userId);
         const add = new Account({
             userId: id,
@@ -67,8 +67,8 @@ async function addAccount(req, res) {
         });
         await add.save();
 
-        const accounts = await Account.find({ userId: id });
-        res.render("pages/allAccount", { account: accounts, msg: null });
+        // const accounts = await Account.find({ userId: id });
+        res.render("pages/allAccount", { account: account , msg: null });
     } catch (err) {
         console.log('err ::: <><>', err);
         return res.status(400).json({
@@ -107,10 +107,10 @@ async function updateAccount(req, res) {
         let { id, name } = req.body;
         const update = await Account.findOneAndUpdate({ _id: id }, { $set: { name: name } });
         await update.save();
-        let data = await Account.find({ userId: update.userId });
+        // let data = await Account.find({ userId: update.userId });
         if (data) {
             console.log('account detail ::: > > >', data);
-            return res.status(200).render("pages/allAccount", { account: data, msg: null });
+            return res.status(200).render("pages/allAccount", { account: account, msg: null });
         }
         else {
             return res.status(400).json({
@@ -228,12 +228,12 @@ async function deleteMember(req, res) {
             await update.save();
             let transactions = await Transaction.find({ account: data._id });
             const memberData = await Account.find({ _id: data._id }, {});
-            res.render("pages/transaction", { transaction: transactions, accountId: data._id, account: memberData, message: "already" });
+            res.render("pages/transaction", { transaction: transactions, accountId: data._id, account: memberData, message: "" });
         }
         else {
             let transactions = await Transaction.find({ account: data._id });
             const memberData = await Account.find({ _id: data._id }, {});
-            res.render("pages/transaction", { transaction: transactions, accountId: data._id, account: memberData, message: "already" });
+            res.render("pages/transaction", { transaction: transactions, accountId: data._id, account: memberData, message: "default" });
         }
     } catch (err) {
         return res.status(400).json({
@@ -250,14 +250,36 @@ async function deleteMember(req, res) {
  */
 async function deleteAccount(req, res) {
     try {
+        const {account, user } = res.locals;
         let data = await Account.findOne({ _id: req.params.id });
+        let members = data.members;
+        console.log('members :::: <><><><<>::::::::::::::::::::::::::::', members);
+        let check = false;
+        console.log('check  ::: ', check);
         if (data.isDefault == false) {
+            for (let i = 0; i < members.length; i++) {
+                console.log('isdefault  :::::::::: , ///??? ', data.isDefault);
+                if (members[i].email == user.email) {
+                    console.log('check after id check  ::: ', check);
+                    if (members[i].isAdmin == true) {
+                        check = true;
+                        // break;
+                    }
+                }
+            }
+        }
+        // console.log('check ::::: ', check );
+        else {
+            return res.render("pages/allAccount", {account:account, msg: "default" });
+        }
+        if (check == true) {
             await Account.remove({ _id: data._id });
             res.redirect("/account");
         }
         else {
-            return res.render("pages/allAccount", { msg: "default" });
+            return res.render("pages/allAccount", {account:account, msg: "noAdmin" });
         }
+        
     } catch (err) {
         return res.status(400).json({
             msg: 'Something went wrong!'

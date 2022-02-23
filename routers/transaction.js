@@ -10,10 +10,10 @@ router.get("/addTransaction/id/:accountId",authorise, getAddTransaction);
 
 router.post("/addTransaction/id/:accountId", authorise, addTransaction);
 
-router.get("/updateTransaction", authorise, getUpdateTransaction);
+router.get("/updateTransaction/:transactionId", authorise, getUpdateTransaction);
 
-router.patch("/updateTransaction", authorise, updateTransaction);
+router.post("/updateTransaction/:transactionId", authorise, updateTransaction);
 
-router.delete("/deleteTransaction", authorise , deleteTransaction);
+router.delete("/deleteTransaction/:transactionId", authorise , deleteTransaction);
 
 module.exports = router;

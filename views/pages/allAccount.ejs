@@ -66,6 +66,14 @@
     {  
       showAlert();
     }
+    noAdmin = function() {
+      return alert("you can not delete Acccount because you are not admin af this account!!");
+    }
+    if("<%= msg %>"=="noAdmin") 
+    {  
+      noAdmin();
+    }
+    noAdmin
     </script>
   <%- include ("../partials/footer")%>
 

@@ -39,7 +39,7 @@
                 <td>
                   <div class="row">
                     <div class="col-sm">
-                      <button class="accountBtn" value="" id="updateBtn"><a href="">
+                      <button class="accountBtn" value="" id="updateBtn"><a href="http://localhost:3000/transaction/updateTransaction/<%= transaction[i].id %>">
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-pen" viewBox="0 0 16 16">
                             <path
@@ -49,7 +49,7 @@
                     </div>
                     <div class="col-sm">
                       <button class="accountBtn" value="" id="deleteBtn"> <a
-                          href="http://localhost:3000/<%= transaction[i].id %>">
+                          href="http://localhost:3000/transaction/deleteTransaction/<%= transaction[i].id %>">
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-trash" viewBox="0 0 16 16">
                             <path

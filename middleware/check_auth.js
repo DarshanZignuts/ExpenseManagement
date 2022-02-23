@@ -8,7 +8,7 @@ module.exports = async(req, res, next) => {
         const decoded = jwt.verify(token, 'secretKey');
         console.log('heyy decoded :::',decoded);
         const user =  await User.findOne({token : token});
-        const account = await Account.find({userId : user._id});
+        const account = await Account.find({"members.email" : user.email});
         // console.log('account :: ><>', account);
         req.userData = decoded;
         req.token = token;
