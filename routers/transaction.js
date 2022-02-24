@@ -14,6 +14,6 @@ router.get("/updateTransaction/:transactionId", authorise, getUpdateTransaction)
 
 router.post("/updateTransaction/:transactionId", authorise, updateTransaction);
 
-router.delete("/deleteTransaction/:transactionId", authorise , deleteTransaction);
+router.get("/deleteTransaction/id/:transactionId", authorise , deleteTransaction);
 
 module.exports = router;

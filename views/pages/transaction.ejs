@@ -49,7 +49,7 @@
                     </div>
                     <div class="col-sm">
                       <button class="accountBtn" value="" id="deleteBtn"> <a
-                          href="http://localhost:3000/transaction/deleteTransaction/<%= transaction[i].id %>">
+                          href="http://localhost:3000/transaction/deleteTransaction/id/<%= transaction[i].id %>">
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-trash" viewBox="0 0 16 16">
                             <path
@@ -112,6 +112,9 @@
     showDefault = function() {
       return alert("you can not delete default Acccount!!");
     }
+    showupdateTransaction= function() {
+      return alert("your data was updated");
+    }
     console.log("message ::: <><>", "<%= message %>")
     if("<%= message %>"=="already") 
     {  
@@ -120,6 +123,9 @@
     if("<%= message %>"=="default") 
     {  
       showDefault();
+    }
+    if("<%= message %>" == "updateTransaction"){
+      showupdateTransaction();
     }
     </script>
     </script>
