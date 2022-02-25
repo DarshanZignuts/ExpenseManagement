@@ -14,7 +14,29 @@ const nodemailer = require('nodemailer');
 async function getAllAccount(req, res) {
     try {
         const { account } = res.locals;
+        let balance = 0;
         if (account) {
+            for (let i = 0; i < account.length; i++) {
+                let transactionData = await Transaction.find({ account: account[i]._id });
+                console.log('transaction adata by get account :::::/*/*/*/*/*/*/*/*/*/', transactionData);
+                if(!transactionData){
+                    await Account.findOneAndUpdate({ _id: account[i]._id }, { $set: { balance : 0} })
+                }
+                else{
+                    for (let j = 0; j < transactionData.length; j++) {
+                        if (transactionData[j].type == "Income") {
+                            balance = balance + parseInt(transactionData[j].amount);
+                        } else if (transactionData[j].type == "Expense") {
+                            balance = balance - parseInt(transactionData[j].amount);
+                        } else if (transactionData[j].type == "TransferToAccount") {
+                            balance = balance - parseInt(transactionData[j].amount);
+                        } else if (transactionData[j].type == "TransferFromAccount") {
+                            balance = balance + parseInt(transactionData[j].amount);
+                        }
+                        await Account.findOneAndUpdate({ _id: account[i]._id }, { $set: { balance } })
+                    }
+                }
+            }
             console.log('account detail ::: > > >', account);
             return res.status(200).render("pages/allAccount", { account: account, msg: null });
         }
@@ -68,7 +90,7 @@ async function addAccount(req, res) {
         await add.save();
 
         // const accounts = await Account.find({ userId: id });
-        res.render("pages/allAccount", { account: account , msg: null });
+        res.render("pages/allAccount", { account: account, msg: null });
     } catch (err) {
         console.log('err ::: <><>', err);
         return res.status(400).json({
@@ -170,17 +192,17 @@ async function addMember(req, res) {
                 host: "smtp.mailtrap.io",
                 port: 2525,
                 auth: {
-                  user: "a5cee4b85d8781",
-                  pass: "64d75fc684958b"
+                    user: "a5cee4b85d8781",
+                    pass: "64d75fc684958b"
                 }
-              });
-              let info = await transporter.sendMail({
+            });
+            let info = await transporter.sendMail({
                 from: '"<smtp.mailtrap.io>', // sender address
                 to: mEmail, // list of receivers
                 subject: "Hello ", // Subject line
                 text: "You are added in account group By expense manager user signup to join them and enjoy it..!!! ", // plain text body
                 html: "<b>Welcome To Expense Manager</b>", // html body
-              });
+            });
             return res.redirect("/transaction/id/" + id);
         } else {
             let transactions = await Transaction.find({ account: id });
@@ -207,7 +229,7 @@ async function deleteMember(req, res) {
         const { account, user } = res.locals;
         const id = req.params.id;
         console.log('id ', id);
-        const data = await Account.findOne({ "members._id" : id  })
+        const data = await Account.findOne({ "members._id": id })
         console.log('account detail in delete members ::: ><><>< ', data);
         let members = data.members;
         console.log('members ::: ', members);
@@ -250,7 +272,7 @@ async function deleteMember(req, res) {
  */
 async function deleteAccount(req, res) {
     try {
-        const {account, user } = res.locals;
+        const { account, user } = res.locals;
         let data = await Account.findOne({ _id: req.params.id });
         let members = data.members;
         console.log('members :::: <><><><<>::::::::::::::::::::::::::::', members);
@@ -270,16 +292,16 @@ async function deleteAccount(req, res) {
         }
         // console.log('check ::::: ', check );
         else {
-            return res.render("pages/allAccount", {account:account, msg: "default" });
+            return res.render("pages/allAccount", { account: account, msg: "default" });
         }
         if (check == true) {
             await Account.remove({ _id: data._id });
             res.redirect("/account");
         }
         else {
-            return res.render("pages/allAccount", {account:account, msg: "noAdmin" });
+            return res.render("pages/allAccount", { account: account, msg: "noAdmin" });
         }
-        
+
     } catch (err) {
         return res.status(400).json({
             msg: 'Something went wrong!'

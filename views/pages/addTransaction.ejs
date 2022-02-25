@@ -9,7 +9,7 @@
 
                 <!-- add transaction detail -->
                 <fieldset>
-                    <legend><span class="number">2</span> Transaction Details:-></legend>
+                    <legend><span class="number">#</span> Transaction Details:-></legend>
                     <br>
                     <div>
                         <!--   div for contain transaction type -->
@@ -17,18 +17,18 @@
                             <label for="Transaction">Transaction Type:</label>
                         </div>
                         <div class="form-inline">
-                            <input type="radio" onclick="javascript:yesnoCheck();" name="yesno" id="incomeCheck" value="income"
-                                required />income
+                            <input type="radio" onclick="javascript:yesnoCheck();" name="yesno" id="incomeCheck"
+                                value="income" required />income
                             <!-- <label for="income">Income</label> -->
                         </div>
                         <div class="form-inline">
-                            <input type="radio" onclick="javascript:yesnoCheck();" name="yesno" id="expenseCheck" value="expense"
-                                required />
+                            <input type="radio" onclick="javascript:yesnoCheck();" name="yesno" id="expenseCheck"
+                                value="expense" required />
                             <label for="expense">Expense</label>
                         </div>
                         <div class="form-inline">
-                            <input type="radio" onclick="javascript:yesnoCheck();" name="yesno" id="transferCheck" value="transfer"
-                                required />
+                            <input type="radio" onclick="javascript:yesnoCheck();" name="yesno" id="transferCheck"
+                                value="transfer" required />
                             <label for="accountTransfer">AccountTransfer</label>
                         </div>
                     </div>
@@ -69,18 +69,28 @@
                         <label for="from">From</label>
                         <select id="transaction" name="accountFrom" required>
                             <optgroup label="From AccountTransfer">
-                                <option value="yourAccount">Default Account</option>
-                                <option value="AnyMember">Member Account</option>
-                            </optgroup>
-                        </select>
-                        <label for="to">To</label>
-                        <select id="transaction" name="accountTo" required>
-                            <optgroup label="To AccountTransfer">
-                                <option value="yourAccount">Default Account</option>
-                                <option value="AnyMember">Member Account</option>
+                                <% for (let i=0 ; i <account.length; i++ ){%>
+                                    <% if(accountId==account[i]._id){ %>
+                                    <option value="<%= account[i]._id%>">
+                                            <%= account[i].name %>
+                                        </option>
+                                        <% } %>
+                                    <% } %>
                             </optgroup>
                         </select>
 
+                        <label for="to">To</label>
+                        <select id="transaction" name="accountTo" required>
+                            <optgroup label="To AccountTransfer">
+                                <% for (let i=0 ; i <account.length; i++ ){%>
+                                    <% if(accountId != account[i]._id){ %>
+                                    <option value="<%= account[i]._id%>">
+                                            <%= account[i].name %>
+                                        </option>
+                                        <% } %>
+                                    <% } %>
+                            </optgroup>
+                        </select>
                     </div>
                     <div></div>
 
