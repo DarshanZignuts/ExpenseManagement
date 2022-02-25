@@ -71,24 +71,29 @@
                             <optgroup label="From AccountTransfer">
                                 <% for (let i=0 ; i <account.length; i++ ){%>
                                     <% if(accountId==account[i]._id){ %>
-                                    <option value="<%= account[i]._id%>">
+                                        <option value="<%= account[i]._id%>">
                                             <%= account[i].name %>
                                         </option>
                                         <% } %>
-                                    <% } %>
+                                            <% } %>
                             </optgroup>
                         </select>
 
                         <label for="to">To</label>
                         <select id="transaction" name="accountTo" required>
                             <optgroup label="To AccountTransfer">
-                                <% for (let i=0 ; i <account.length; i++ ){%>
-                                    <% if(accountId != account[i]._id){ %>
-                                    <option value="<%= account[i]._id%>">
-                                            <%= account[i].name %>
-                                        </option>
+                                <% if (account.length < 1) { for (let i=0 ; i < account.length; i++ ){%>
+                                    <% if(accountId !=account[i]._id ){ %>
+                                        <% if(account[i].name !=null) {%>
+                                            <option value="<%= account[i]._id%>">
+                                                <%= account[i].name %>
+                                            </option>
                                         <% } %>
-                                    <% } %>
+                                    <% } } }else{ %> 
+                                    <option value="no another account">
+                                        you need to create another
+                                    </option>
+                                <% } %>
                             </optgroup>
                         </select>
                     </div>
