@@ -39,15 +39,15 @@ async function getAddTransaction(req, res) {
     try {
         const { account } = res.locals;
         let accountId = req.params.accountId;
-        const accountDetail =  await Account.findOne({_id : accountId })
-        const name  = accountDetail.name; 
+        const accountDetail = await Account.findOne({ _id: accountId })
+        const name = accountDetail.name;
         return res.render("pages/addTransaction", { account, name, accountId: accountId })
     } catch (err) {
         return res.status(400).json({
             msg: 'Something went wrong!'
         });
     }
-} 
+}
 /**
 * @param {*} req
 * @param {*} res
@@ -73,6 +73,8 @@ async function addTransaction(req, res) {
             if (balance >= 0) {
                 const data = new Transaction({ account: id, type: "Expense", from: expenseFrom, to: expense, discription: transactionDescription, amount: Amount });
                 await data.save();
+                await Account.findOneAndUpdate({ _id: id }, { $set: { balance } });
+                res.redirect("/transaction/id/" + id);
             } else {
                 res.render("pages/transaction", { transaction: transactions, accountId: id, account: memberData, msg: "lowBalance" });
             }
@@ -81,12 +83,12 @@ async function addTransaction(req, res) {
             if (balance >= 0) {
                 const data = new Transaction({ account: id, type: "TransferToAccount", from: accountFrom, to: accountTo, discription: transactionDescription, amount: Amount });
                 await data.save();
+                await Account.findOneAndUpdate({ _id: id }, { $set: { balance } });
+                res.redirect("/transaction/id/" + id);
             } else {
                 res.render("pages/transaction", { transaction: transactions, accountId: id, account: memberData, msg: "transferUnavailable" });
             }
         }
-        await Account.findOneAndUpdate({ _id: id }, { $set: { balance } });
-        res.redirect("/transaction/id/" + id);
     } catch (err) {
         return res.status(400).json({
             msg: 'Something went wrong!'
@@ -129,8 +131,13 @@ async function updateTransaction(req, res) {
         let balance = accountDetail.balance;
         console.log('member data balance :::::: ', balance);
         const { yesno, transactionDescription, Amount } = req.body;
-        let diffBalance =  parseInt(Amount) - transaction.amount ;
-        balance = balance + diffBalance;
+        if (transaction.type == "Income") {
+            balance = balance - transaction.amount;
+            balance = balance + parseInt(Amount);
+        } else {
+            balance = balance + transaction.amount;
+            balance = balance - parseInt(Amount);
+        }
         if (balance >= 0) {
             const data = await Transaction.findOneAndUpdate({ _id: id }, {
                 account: accountId,
