@@ -43,13 +43,13 @@
                             </optgroup>
                         </select>
                         <label for="to">To</label>
-                        <input type="text" value="defaultAccount" name="incomeTo" readonly>
+                        <input type="text" value="<%= name %>" name="incomeTo" readonly>
 
                     </div>
                     <div id="expenseDrop" style="display: none;">
 
                         <label for="from">From</label>
-                        <input type="text" value="defaultAccount" name="expenseFrom" readonly>
+                        <input type="text" value=" <%= name %> " name="expenseFrom" readonly>
                         <label for="to">To</label>
                         <select id="transaction" name="expense" required>
                             <optgroup label="Expense">

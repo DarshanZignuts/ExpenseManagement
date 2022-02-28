@@ -13,17 +13,14 @@ const { parse } = require('dotenv');
 async function getAllTransaction(req, res) {
     try {
         let accountId = req.params.accountId;
-        let { account, user } = res.locals; // done
-        // let member = { _id : account.name, email: user.email };
         let transactions = await Transaction.find({ account: accountId });
+        const memberData = await Account.find({ _id: accountId }, {});
         if (!transactions) {
             return res.status(400).json({
                 msg: "no data availabale"
             });
         } else {
-            const memberData = await Account.find({ _id: accountId }, {});
-            console.log('members <<<<<>>>>>', memberData);
-            res.render("pages/transaction", { transaction: transactions, accountId: accountId, account: memberData, message: "" });
+            res.render("pages/transaction", { transaction: transactions, accountId: accountId, account: memberData, msg: "" });
         }
     } catch (err) {
         return res.status(400).json({
@@ -42,14 +39,15 @@ async function getAddTransaction(req, res) {
     try {
         const { account } = res.locals;
         let accountId = req.params.accountId;
-        return res.render("pages/addTransaction", { account, accountId: accountId })
+        const accountDetail =  await Account.findOne({_id : accountId })
+        const name  = accountDetail.name; 
+        return res.render("pages/addTransaction", { account, name, accountId: accountId })
     } catch (err) {
         return res.status(400).json({
             msg: 'Something went wrong!'
         });
     }
-}
-
+} 
 /**
 * @param {*} req
 * @param {*} res
@@ -61,35 +59,34 @@ async function addTransaction(req, res) {
         console.log('req body ::::>>>>', req.body);
         const id = req.params.accountId;
         console.log("heyy acount id ", id);
-        const accountData = await Account.findOne({_id : id});
+        const accountData = await Account.findOne({ _id: id });
         let balance = accountData.balance;
+        let transactions = await Transaction.find({ account: id });
+        const memberData = await Account.find({ _id: id }, {});
         const { yesno, income, incomeTo, expenseFrom, expense, accountFrom, accountTo, transactionDescription, Amount } = req.body;
         if (yesno == "income") {
+            balance = balance + parseInt(Amount);
             const data = new Transaction({ account: id, type: "Income", from: income, to: incomeTo, discription: transactionDescription, amount: Amount });
             await data.save();
-            balance = balance + parseInt(Amount);
-            await Account.findOneAndUpdate({_id : id}, {$set: {balance}})
-            let transactions = await Transaction.find({ account: id });
-            const memberData = await Account.find({ _id: id }, {});
-            res.render("pages/transaction", { transaction: transactions, accountId: id, account: memberData, message: "" });
         } else if (yesno == "expense") {
-            const data = new Transaction({ account: id, type: "Expense", from: expenseFrom, to: expense, discription: transactionDescription, amount: Amount });
-            await data.save();
             balance = balance - parseInt(Amount);
-            await Account.findOneAndUpdate({_id : id}, {$set: {balance}})
-            let transactions = await Transaction.find({ account: id });
-            const memberData = await Account.find({ _id: id }, {});
-            res.render("pages/transaction", { transaction: transactions, accountId: id, account: memberData, message: "" });
+            if (balance >= 0) {
+                const data = new Transaction({ account: id, type: "Expense", from: expenseFrom, to: expense, discription: transactionDescription, amount: Amount });
+                await data.save();
+            } else {
+                res.render("pages/transaction", { transaction: transactions, accountId: id, account: memberData, msg: "lowBalance" });
+            }
         } else if (yesno == "transfer") {
-            const data = new Transaction({ account: id, type: "TransferToAccount", from: accountFrom, to: accountTo, discription: transactionDescription, amount: Amount });
-            await data.save();
             balance = balance - parseInt(Amount);
-            await Account.findOneAndUpdate({_id : id}, {$set: {balance}});
-            let transactions = await Transaction.find({ account: id });
-            const memberData = await Account.find({ _id: id }, {});
-            res.render("pages/transaction", { transaction: transactions, accountId: id, account: memberData, message: "" });
+            if (balance >= 0) {
+                const data = new Transaction({ account: id, type: "TransferToAccount", from: accountFrom, to: accountTo, discription: transactionDescription, amount: Amount });
+                await data.save();
+            } else {
+                res.render("pages/transaction", { transaction: transactions, accountId: id, account: memberData, msg: "transferUnavailable" });
+            }
         }
-
+        await Account.findOneAndUpdate({ _id: id }, { $set: { balance } });
+        res.redirect("/transaction/id/" + id);
     } catch (err) {
         return res.status(400).json({
             msg: 'Something went wrong!'
@@ -126,26 +123,30 @@ async function updateTransaction(req, res) {
     try {
         console.log('req body ::::>>>>', req.body);
         const id = req.params.transactionId;
-        // console.log("heyy transaction id ", id);
         const transaction = await Transaction.findOne({ _id: id });
         const accountId = transaction.account;
-        const accountDetail = await Account.findOne({_id : accountId})
+        const accountDetail = await Account.findOne({ _id: accountId })
         let balance = accountDetail.balance;
         console.log('member data balance :::::: ', balance);
         const { yesno, transactionDescription, Amount } = req.body;
-        const data = await Transaction.findOneAndUpdate({ _id: id }, {
-            account: accountId,
-            discription: transactionDescription + " !!!modified",
-            amount: Amount
-        });
-        balance = balance ;
-        await data.save();
-        balance = balance - parseInt(transaction.amount) + parseInt(Amount);
-        await Account.findOneAndUpdate({_id : accountId}, {$set : {balance}});
+        let diffBalance =  parseInt(Amount) - transaction.amount ;
+        balance = balance + diffBalance;
+        if (balance >= 0) {
+            const data = await Transaction.findOneAndUpdate({ _id: id }, {
+                account: accountId,
+                discription: transactionDescription + " !!!modified",
+                amount: Amount
+            });
+            await data.save();
+            await Account.findOneAndUpdate({ _id: accountId }, { $set: { balance } });
+        } else {
+            const transactions = await Transaction.find({ account: accountId });
+            const memberData = await Account.find({ _id: accountId }, {});
+            res.render("pages/transaction", { transaction: transactions, accountId, account: memberData, msg: "noEdit" });
+        }
         let transactions = await Transaction.find({ account: accountId });
-        const memberData = await Account.find({ _id: accountId}, {});
-        res.render("pages/transaction", { transaction: transactions, accountId, account: memberData, message: "updateTransaction" })
-        // res.send(" updateTransaction work in progress...");
+        const memberData = await Account.find({ _id: accountId }, {});
+        res.render("pages/transaction", { transaction: transactions, accountId, account: memberData, msg: "updateTransaction" });
     } catch (err) {
         return res.status(400).json({
             msg: 'Something went wrong!'
@@ -163,19 +164,25 @@ async function deleteTransaction(req, res) {
     try {
         const tId = req.params.transactionId;
         const transactionData = await Transaction.findOne({ _id: tId });
-        const accountDetail = await Account.findOne({_id : transactionData.account});
+        const accountDetail = await Account.findOne({ _id: transactionData.account });
         let balance = accountDetail.balance;
         const accountId = accountDetail._id;
-        if(transactionData.type == "Income"){
+        if (transactionData.type == "Income") {
             balance = balance - parseInt(transactionData.amount);
-        }else if (transactionData.type == "Expense"){
+        } else if (transactionData.type == "Expense") {
             balance = balance + parseInt(transactionData.amount);
-        }else if(transactionData.type == "TransferToAccount"){
+        } else if (transactionData.type == "TransferToAccount") {
             balance = balance + parseInt(transactionData.amount);
         }
-        await Account.findOneAndUpdate({_id : accountId},{$set : {balance}})
-        await Transaction.deleteOne({ _id: tId });
-        res.redirect(`/transaction/id/${accountId}`)
+        if (balance >= 0) {
+            await Account.findOneAndUpdate({ _id: accountId }, { $set: { balance } })
+            await Transaction.deleteOne({ _id: tId });
+            res.redirect(`/transaction/id/${accountId}`)
+        } else {
+            let transactions = await Transaction.find({ account: accountId });
+            const memberData = await Account.find({ _id: accountId }, {});
+            res.render("pages/transaction", { transaction: transactions, accountId, account: memberData, msg: "noDelete" })
+        }
     } catch (err) {
         return res.status(400).json({
             msg: 'Something went wrong!'
@@ -184,9 +191,3 @@ async function deleteTransaction(req, res) {
 }
 
 module.exports = { getAllTransaction, getAddTransaction, addTransaction, getUpdateTransaction, updateTransaction, deleteTransaction };
-
-
-// let balance =  accountData.balance;
-// balance = balance + parseInt(Amount);
-//             console.log('account balance :::::: ', balance);
-// await Account.updateOne({_id : id }, {$set : {balance : balance }});

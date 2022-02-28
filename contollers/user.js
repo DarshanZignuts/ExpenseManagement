@@ -2,13 +2,13 @@ const bcrypt = require('bcrypt');
 const User = require("../models/user");
 const Account = require("../models/account");
 const jwt = require("jsonwebtoken");
-const nodemailer = require('nodemailer');
+const {transporter } = require('../middleware/utility');
 const { cookie } = require('express/lib/response');
 
 /**
  * @param {*} req
  * @param {*} res
- * @description home without login by using get
+ * @description home forSignUp by using get
  * @author `DARSHAN ZignutsTechnolab`
  */
 async function getsignup(req, res) {
@@ -53,29 +53,13 @@ async function signUp(req, res) {
                         isDefault: true
                     });
                     await defaultAccount.save();
-                    let transporter = nodemailer.createTransport({
-                        host: "smtp.mailtrap.io",
-                        port: 2525,
-                        secure: false, // true for 465, false for other ports
-                        auth: {
-                            user: "a5cee4b85d8781", // generated ethereal user
-                            pass: "64d75fc684958b", // generated ethereal password
-                        },
-                        tls:{
-                            rejectUnauthorized:false
-                        }
-                    });
-
-                    let info = await transporter.sendMail({
+                    let info = transporter.sendMail({
                         from: '"ExpenseManager" <test@expensemanager.com>', // sender address
                         to: req.body.email, // list of receivers
                         subject: "welcome mail", // Subject line
                         text: "hey welcome to expense manager thank you to create an accont to our web", // plain text body
                         html: "<b>hello user</b>", // html body
                     });
-
-                    console.log("Message To : %s", info.to);
-                    // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
                 res.status(200).render("pages/login", { result: { message: " enter your detail here to login...!" } })
             }
             });
@@ -178,7 +162,7 @@ async function logout(req, res) {
 /**
  * @param {*} req
  * @param {*} res
- * @description user delete in user by using delete
+ * @description user delete in user by using get
  * @author `DARSHAN ZignutsTechnolab`
  */
 async function deleteUser(req, res) {

@@ -2,13 +2,13 @@
 
   <div class="float-container text-white">
     <nav class="navbar navbar-light bg-light justify-content-between">
-            <label class="text-dark" for="balance">Balance: - > <%= account[0].balance%></label>
-            <a class="navbar-brand">Account Detail</a>
+      <label class="text-dark" for="balance">Balance: - > <%= account[0].balance%></label>
+      <a class="navbar-brand">Account Detail</a>
       <form class="navform" method="GET" action="/transaction/addTransaction/id/<%= accountId %>"><a href=""><button
             class="transaction btn btn-outline-warning my-2 my-sm-0" type="submit">AddTransaction</button></a></form>
 
     </nav>
-    <div class="row d-flex justify-content-center  h-100">
+    <div class="row d-flex justify-content-center h-100">
       <div class="col-lg-3 col-xl-3">
         <table class="table " style="width: 100%; margin: 0; background-color: wheat;">
           <thead class="thead-dark">
@@ -16,23 +16,24 @@
               <h1> Members</h1>
               <tr class="text-center">
                 <th scope="col" name="refId" style="width: 350px;">memberName</th>
-                <th scope="col" name="action"><button class="member" value="" id="updateBtn" style="width: 120px;" >
-                  <a href="/account/addMember/<%= accountId%>" >Member &#43; </a></button></th>
+                <th scope="col" name="action"><button class="member" value="" id="updateBtn" style="width: 120px;">
+                    <a href="/account/addMember/<%= accountId%>">Member &#43; </a></button></th>
               </tr>
           </thead>
           <tbody>
             <tr>
               <% for (let j=0; j< account[i].members.length ; j++) {%>
-                <td >
+                <td>
                   <%=account[i].members[j].name %>
                 </td>
                 <td class="text-center" style="margin-left:50%">
 
                   <div class="row d-flex justify-content-center">
-                      <button class="accountbtn" value="" id="updateBtn" > <a
-                          href="http://localhost:3000/account/deleteMember/<%= account[i].members[j]._id %>">
-                          &times</a>
-                      </button>
+                    <button class="accountbtn" value="" id="updateBtn"> <a
+                        onclick="return confirm(`Are You Sure You Want To Delete?`)"
+                        href="http://localhost:3000/account/deleteMember/<%= account[i].members[j]._id %>">
+                        &times</a>
+                    </button>
                   </div>
                 </td>
             </tr>
@@ -83,6 +84,7 @@
                     </div>
                     <div class="col-sm">
                       <button class="accountBtn" value="" id="deleteBtn"> <a
+                          onclick="return confirm(`Are You Sure You Want To Delete Transaction?`)"
                           href="http://localhost:3000/transaction/deleteTransaction/id/<%= transaction[i].id %>">
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-trash" viewBox="0 0 16 16">
@@ -108,21 +110,52 @@
     showAlready = function () {
       return alert("Member Already In Account Group!!! ");
     }
-    showDefault = function () {
-      return alert("you can not delete default Acccount!!");
-    }
     showupdateTransaction = function () {
-      return alert("your data was updated");
+      return alert("your Transaction was updated");
     }
-    console.log("message ::: <><>", "<%= message %>")
-    if ("<%= message %>" == "already") {
+    showDefault = function () {
+      return alert("You Can't Delete Or Remove Admin User From Account!!");
+    }
+    alreadyMember = function () {
+      return alert("Member Already In Account Group!! ");
+    }
+    defaultMember = function () {
+      return alert("This is a creater of the account they can not be remove!! ");
+    }
+    deleteMember = function () {
+      return alert("Member Removed From Account Group!! ");
+    }
+    lowBalance = function(){
+      return alert("Your Account Have Low Balance For Your Expense");
+    }
+    transferUnavailable = function(){
+      return alert("Your Account Have Low Balance For Transfer Amount");
+    }
+    noEdit = function(){
+      return alert("You can Not Modified This because Of low balance");
+    }
+    updateTransaction = function (){
+      return alert("Your Transaction Modified SuccessFully");
+    }
+    console.log("message ::: <><>", "<%= msg %>")
+    if ("<%= msg %>" == "already") {
       showAlready();
-    }
-    if ("<%= message %>" == "default") {
+    }else if ("<%= msg %>" == "default") {
       showDefault();
-    }
-    if ("<%= message %>" == "updateTransaction") {
+    }else if ("<%= msg %>" == "updateTransaction") {
       showupdateTransaction();
+    }else if ("<%= msg %>" == "already") {
+      alreadyMember();
+    }else if ("<%= msg %>" == "deleted") {
+      deleteMember();
+    }else if("<%= msg %>" == "lowBaalance"){
+      lowBalance();
+    }else if("<%= msg %>" == "transferUnavailable"){
+      lowBalance();
+    }else if("<%= msg %>" == "noEdit"){
+      lowBalance();
+    }else if("<%= msg %>" == "updateTransaction"){
+      lowBalance();
     }
   </script>
   </script>

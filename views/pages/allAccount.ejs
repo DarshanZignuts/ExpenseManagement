@@ -37,7 +37,7 @@
                     </a>
                   
             
-                   <a onclick="return confirm(`are you sure you want to delete?`)"
+                   <a onclick="return confirm(`Are You Sure You Want To Delete Account?`)"
                       href="/account/deleteAccount/<%= account[i].id %>"><button class="accountBtn" value="" id="deleteBtn">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-trash" viewBox="0 0 16 16">
@@ -59,21 +59,25 @@
 
   <script type="text/javascript">      
     showAlert = function() {
-      return alert("you can not delete default Acccount!!");
+      return alert("You can not delete default Acccount!!");
     }
-    console.log("msg ::: <><>", "<%= msg %>")
+    noAdmin = function() {
+      return alert("You can not delete Acccount because you are not admin of this account!!");
+    }
+    updateAccount = function(){
+      return alert("Update AccountName Successfully In Account Group!! ");
+    }
     if("<%= msg %>"=="default") 
     {  
       showAlert();
     }
-    noAdmin = function() {
-      return alert("you can not delete Acccount because you are not admin af this account!!");
-    }
-    if("<%= msg %>"=="noAdmin") 
+    else if("<%= msg %>"=="noAdmin") 
     {  
       noAdmin();
     }
-    noAdmin
+    else if("<%= msg %>" == "accountUpdate"){
+      updateAccount();
+    }
     </script>
   <%- include ("../partials/footer")%>
 
