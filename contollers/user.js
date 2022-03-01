@@ -102,7 +102,7 @@ async function loginUser(req, res) {
         const { email, password } = req.body;
         let user = await User.findOne({ email: email });
         if (!user) {
-            return res.status(401).render("pages/login", { result: { message: "user not Found" } })
+            return res.status(401).render("pages/login", { result: { message: "Enter Your Login Detail To Use Features Of ExpenseManager" } })
         }
         bcrypt.compare(password, user.password, async (err, result) => {
             if (err) {

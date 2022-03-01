@@ -68,6 +68,8 @@ async function addTransaction(req, res) {
             balance = balance + parseInt(Amount);
             const data = new Transaction({ account: id, type: "Income", from: income, to: incomeTo, discription: transactionDescription, amount: Amount });
             await data.save();
+            await Account.findOneAndUpdate({ _id: id }, { $set: { balance } });
+            res.redirect("/transaction/id/" + id);
         } else if (yesno == "expense") {
             balance = balance - parseInt(Amount);
             if (balance >= 0) {
