@@ -122,13 +122,11 @@ async function loginUser(req, res) {
                 );
                 // return res.status(200).render("pages/home", {result : {token: token, user: user.email}});
                 await User.updateOne({ email: email }, { $set: { token: token } })
-                console.log('token ::: ', token);
 
                 res.cookie("jwt", token, {
                     expires: new Date(Date.now() + 3000000000),
                     httponly: true
                 });
-                console.log('cookies ::: > > > ', cookie);
                 return res.status(200).render("pages/home");
             }
             return res.status(401).render("pages/login", { result: { message: "Please Enter Your Detail To Login " } })

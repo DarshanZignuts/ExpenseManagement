@@ -15,12 +15,15 @@ async function getAllTransaction(req, res) {
         let accountId = req.params.accountId;
         let transactions = await Transaction.find({ account: accountId });
         const memberData = await Account.find({ _id: accountId }, {});
+        const { account } = res.locals;
         if (!transactions) {
             return res.status(400).json({
                 msg: "no data availabale"
             });
         } else {
-            res.render("pages/transaction", { transaction: transactions, accountId: accountId, account: memberData, msg: "" });
+            const accountDetail = await Account.findOne({ _id: accountId });
+            const name = accountDetail.name;
+            res.render("pages/transaction", { accountDetail: account, transaction: transactions, accountId: accountId, account: memberData, name,  msg: "" });
         }
     } catch (err) {
         return res.status(400).json({
@@ -37,6 +40,7 @@ async function getAllTransaction(req, res) {
  */
 async function getAddTransaction(req, res) {
     try {
+        console.log('get transaction ');
         const { account } = res.locals;
         let accountId = req.params.accountId;
         const accountDetail = await Account.findOne({ _id: accountId })

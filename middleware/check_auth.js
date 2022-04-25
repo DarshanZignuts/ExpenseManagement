@@ -6,7 +6,6 @@ module.exports = async(req, res, next) => {
     try{
         const token = req.cookies.jwt;
         const decoded = jwt.verify(token, 'secretKey');
-        console.log('heyy decoded :::',decoded);
         const user =  await User.findOne({token : token});
         const account = await Account.find({"members.email" : user.email});
         // console.log('account :: ><>', account);

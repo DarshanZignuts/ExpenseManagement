@@ -6,9 +6,9 @@ const { getAllTransaction, getAddTransaction, addTransaction, getUpdateTransacti
 
 router.get("/id/:accountId", authorise, getAllTransaction);
 
-router.get("/addTransaction/id/:accountId",authorise, getAddTransaction);
+router.get("/addTransaction/id",authorise, getAddTransaction);
 
-router.post("/addTransaction/id/:accountId", authorise, addTransaction);
+router.post("/addTransaction/id", authorise, addTransaction);
 
 router.get("/updateTransaction/:transactionId", authorise, getUpdateTransaction);
 
