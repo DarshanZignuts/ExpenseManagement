@@ -7,7 +7,7 @@
 
       </nav>
       <div class="row d-flex justify-content-center h-100">
-        <div class="col-lg-3 col-xl-3">
+        <div class="scrollMember col-lg-3 col-xl-3">
           <table class="table text-light" style="width: 100%; margin: 0; ">
             <thead class="thead-dark" style="width: 400px;">
               <% for ( let i=0; i < account.length ; i++) { %>
@@ -56,7 +56,7 @@
             </tbody>
           </table>
         </div>
-        <div class="col-lg-7 col-xl-8" style=" border-style:hidden hidden hidden solid">
+        <div class="scrollTransaction col-lg-7 col-xl-8" style="border-style:hidden hidden hidden solid;">
           <table class="table text-light " style="width: 100%; margin-top : 0; ">
             <thead class="thead-dark ">
               <tr>
@@ -82,12 +82,12 @@
                 style="font-size: 24px; text-decoration: underline; color: rgba(83, 255, 189, 0.733);">
                 <th scope="col" name="type">Type</th>
                 <th scope="col" name="refId">TransactionID</th>
-                <th scope="col" name="category">Category</th>
+                <th scope="col" name="category">Discription</th>
                 <th scope="col" name="amount">Amount</th>
                 <th scope="col" name="action">Action</th>
               </tr>
             </thead>
-            <tbody class="p-4" style="font-size: 20px;">
+            <tbody class="p-4" style="font-size: 20px; overflow-y: scroll;">
               <% for ( let i=0; i < transaction.length; i++) { %>
                 <tr class="text-center">
                   <td>
@@ -125,7 +125,6 @@
                               d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
                           </svg></a>
 
-
                       </div>
                     </div>
                   </td>
@@ -138,7 +137,7 @@
       </div>
     </div>
 
-    <!-- The Modal -->
+    <!-- The Modal for member -->
 
     <div id="myModal" class="modal">
 
@@ -170,8 +169,8 @@
               <td colspan="2" style="height: 30px;">
                 <button class="btn btn-outline-success" style="height: auto;" type="submit" value="submit"
                   name="submit">Submit</button>
-                <button class="close btn memberbtn btn-outline-danger" style="height: auto;" type="submit" value="submit"
-                  name="submit">Cancle</button>
+                <a href="/transaction/id/<%= accountId %>" class="close btn memberbtn btn-outline-danger"
+                  style="height: auto;" type="submit" value="submit" name="submit">Cancle</a>
               </td>
             </tr>
           </table>
@@ -180,202 +179,162 @@
 
     </div>
 
+    <!-- The Modal for add Transaction -->
+
     <div id="transactionModel" class="modal">
       <!-- Modal content -->
       <div class="modal-content" style="color: black;">
-        <form action="/transaction/addTransaction/id" method="post">
+        <form action="/transaction/addTransaction" method="post">
           <h2> Transaction Details :-> </h2>
-          
+
+          <label for="Transaction">Transaction Type:</label>
           <input type="text" name="id" value="<%= accountId %>" hidden>
           <fieldset>
-            <table>
-              <div class="form-inline">
-                <tr style="height: 35px;">
-                  <td colspan="2" height="30">
-                    <label for="Transaction">Transaction Type:</label>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="2">
-                    <input type="radio" onclick="javascript:yesnoCheck();" name="yesno" id="incomeCheck" value="income"
-                      required />
-                    <label for="income">Income</label>
+            <div class="form-inline text-center" style="width: 350px;">
+              <input type="radio" onclick="javascript:yesnoCheck();" name="yesno" id="incomeCheck" value="Income"
+                required />
+              <label for="income">Income</label>
+              <input type="radio" onclick="javascript:yesnoCheck();" name="yesno" id="expenseCheck" value="Expense"
+                required />
+              <label for="expense">Expense</label>
+              <% if (accountDetail.length> 1 ){ %>
+                <input type="radio" onclick="javascript:yesnoCheck();" name="yesno" id="transferCheck"
+                  value="TransferToAccount" required />
+                <label for="accountTransfer">AccountTransfer</label>
+                <% } %>
+                  <div id="incomeDrop" style="display: none;">
+                    <table>
+                      <tr style="width: 350px; height: 45px;">
+                        <td style="width: 110px;">
+                          <label for="from">From</label>
+                        </td>
+                        <td>
 
-                    <input type="radio" onclick="javascript:yesnoCheck();" name="yesno" id="expenseCheck"
-                      value="expense" required />
-                    <label for="expense">Expense</label>
-                    <% if (accountDetail.length> 1 ){ %>
-                      <input type="radio" onclick="javascript:yesnoCheck();" name="yesno" id="transferCheck"
-                        value="transfer" required />
-                      <label for="accountTransfer">AccountTransfer</label>
-                      <% } %>
-                  </td>
-                </tr>
-              </div>
-            </table>
+                          <select id="transaction" name="income" style="width: 220px;" required>
+                            <optgroup label="Income">
+                              <option value="salary">Salary</option>
+                              <option value="saleItem">SaleItem</option>
+                              <option value="Other">Other</option>
+                            </optgroup>
+                          </select>
+                        </td>
+                      </tr>
 
-            <table id="incomeDrop" style="display:none">
-              <div>
-                <tr>
-                  <td>
-                    <label for="from">From</label>
-                  </td>
-                  <td>
-                    <select id="transaction" name="income" style="width: 220px;" required>
-                      <optgroup label="Income">
-                        <option value="salary">Salary</option>
-                        <option value="saleItem">SaleItem</option>
-                        <option value="Other">Other</option>
-                      </optgroup>
-                    </select>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label for="to">To</label>
-                  </td>
-                  <td>
-                    <input type="text" value="<%= name %>" name="incomeTo" style="width: 220px; height: 27px;" readonly>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label for="discription">Discription:</label>
-                  </td>
-                  <td>
-                    <textarea id="discription" name="transactionDescription" style="width: 220px; height: 45px;"
-                      required></textarea>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label for="amount"> Amount: </label>
-                  </td>
-                  <td>
-                    <input type="text" id="amount" pattern="[0-9]*" name="Amount" style="width: 220px; height: 30px;" required>
-                  </td>
-                </tr>
-              </div>
-            </table>
+                      <tr>
+                        <td>
+                          <label for="to">To</label>
+                        </td>
+                        <td>
+                          <input type="text" value="<%= name %>" name="incomeTo" style="width: 220px; height: 27px;"
+                            readonly>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                  <div id="expenseDrop" style="display: none;">
+                    <table>
+                      <tr style="width: 350px; height: 45px;">
+                        <td style="width: 110px;">
+                          <label for="from">From</label>
+                        </td>
+                        <td>
+                          <input type="text" value=" <%= name %> " style="width: 220px; height: 30px;"
+                            name="expenseFrom" readonly>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <label for="to">To</label>
+                        </td>
+                        <td>
+                          <select id="transaction" name="expense" style="width: 220px;" required>
+                            <optgroup label="Expense">
+                              <option value="food">Food</option>
+                              <option value="shopping">Shopping</option>
+                              <option value="homeexpense">HomeExpense</option>
+                              <option value="travaling">Travaling</option>
+                              <option value="tour">Tour</option>
+                              <option value="rent">Rent</option>
+                            </optgroup>
+                          </select>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                  <% if (accountDetail.length> 1 ){ %>
+                    <div id="transferDrop" style="display: none;">
+                      <table>
+                        <tr style="width: 350px; height: 45px;">
+                          <td style="width: 110px;">
+                            <label for="from">From</label>
+                          </td>
+                          <td>
+                            <select id="transaction" name="accountFrom" style="width: 210px;" required>
+                              <!-- <input type="text" name="" id=""> -->
+                              <optgroup label="From AccountTransfer">
+                                <% for (let i=0 ; i < account.length; i++ ){%>
+                                  <% if(accountId==account[i]._id){ %>
+                                    <option value="<%= account[i]._id%>">
+                                      <%= account[i].name %>
+                                    </option>
+                                    <% } %>
+                                      <% } %>
+                              </optgroup>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <label for="to">To</label>
+                          </td>
+                          <td>
+                            <select id="transaction" name="accountTo" style="width: 220px;" required>
+                              <optgroup label="To AccountTransfer">
+                                <% for (let i=0 ; i < accountDetail.length; i++ ){ %>
+                                  <%if(accountId !=accountDetail[i].id){ %>
+                                    <option value="<%= accountDetail[i]._id%>">
+                                      <%= accountDetail[i].name %>
+                                    </option>
+                                    <% } } %>
+                              </optgroup>
+                            </select>
+                          </td>
+                        </tr>
+                      </table>
 
-            <table id="expenseDrop" style="display: none;" style="width: 350px;">
-              <div>
-                <tr>
-                  <td>
-                    <label for="from">From</label>
-                  </td>
-                  <td>
-                    <input type="text" value=" <%= name %> " style="width: 220px; height: 30px;" name="expenseFrom" readonly>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label for="to">To</label>
-                  </td>
-                  <td>
-                    <select id="transaction" name="expense" style="width: 220px;" required>
-                      <optgroup label="Expense">
-                        <option value="food">Food</option>
-                        <option value="shopping">Shopping</option>
-                        <option value="homeexpense">HomeExpense</option>
-                        <option value="travaling">Travaling</option>
-                        <option value="tour">Tour</option>
-                        <option value="rent">Rent</option>
-                      </optgroup>
-                    </select>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label for="discription">Discription:</label>
-                  </td>
-                  <td>
-                    <textarea id="discription" name="transactionDescription" style="width: 220px; height: 45px;"
-                      required></textarea>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label for="amount"> Amount: </label>
-                  </td>
-                  <td>
-                    <input type="text" id="amount" pattern="[0-9]*" name="Amount" style="width: 220px; height: 30px;" required>
-                  </td>
-                </tr>
-              </div>
-            </table>
+                    </div>
+                    <% } %>
+                      <table>
+                        <tr>
+                          <td style="width: 110px;">
+                            <label for="discription">Discription:</label>
+                          </td>
+                          <td>
+                            <textarea id="discription" name="transactionDescription" style="width: 220px; height: 45px;"
+                              required></textarea>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <label for="amount"> Amount: </label>
+                          </td>
+                          <td>
+                            <input type="text" id="amount" pattern="[0-9]*" name="Amount"
+                              style="width: 220px; height: 30px;" required>
+                          </td>
+                        </tr>
+                      </table>
 
-            <table id="transferDrop" style="display: none;">
-              <div>
-                <tr>
-                  <td><label for="from">From</label></td>
-                  <td>
-                    <select id="transaction" name="accountFrom" style="width: 220px;" required>
-                      <!-- <input type="text" name="" id=""> -->
-                      <optgroup label="From AccountTransfer">
-                        <% for (let i=0 ; i < account.length; i++ ){%>
-                          <% if(accountId==account[i]._id){ %>
-                            <option value="<%= account[i]._id%>">
-                              <%= account[i].name %>
-                            </option>
-                            <% } %>
-                              <% } %>
-                      </optgroup>
-                    </select>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label for="to">To</label>
-                  </td>
-                  <td>
-                    <select id="transaction" name="accountTo" style="width: 220px;" required>
-                      <optgroup label="To AccountTransfer" >
-                        <% for (let i=0 ; i < accountDetail.length; i++ ){ %>
-                            <%if(accountId != accountDetail[i].id){ %>
-                              <option value="<%= accountDetail[i]._id%>">
-                                <%= accountDetail[i].name %>
-                              </option>
-                              <% } } %>
-                      </optgroup>
-                    </select>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label for="discription">Discription:</label>
-                  </td>
-                  <td>
-                    <textarea id="discription" name="transactionDescription" style="width: 220px; height: 45px;"
-                      required></textarea>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label for="amount"> Amount: </label>
-                  </td>
-                  <td>
-                    <input type="text" id="amount" pattern="[0-9]*" name="Amount" style="width: 220px; height: 30px;" required>
-                  </td>
-                </tr>
-              </div>
-            </table>
+                      <button class="btn btn-outline-success" style="height: auto;" type="submit" value="submit"
+                        name="submit">Submit</button>
 
-            <table class="text-center" style="width: 350px;">
-              <tr>
-                <td colspan="2" style="height: 30px;">
-                  <button class="btn btn-outline-success" style="height: auto;" type="submit" value="submit"
-                    name="submit">Submit</button>
-                  <button class="transactionSpan btn btn-outline-danger" style="height: auto;">Cancle</button>
-                </td>
-              </tr>
-            </table>
+                      <a href="/transaction/id/<%= accountId %>" class="close btn btn-outline-danger"
+                        style="height: auto;">Cancle</a>
+            </div>
           </fieldset>
-
         </form>
       </div>
     </div>
-
 
   </section>
 
@@ -422,16 +381,17 @@
       document.getElementById('ifNo').style.display = 'none';
     }
     function yesnoCheck() {
-      if (document.getElementById('incomeCheck').checked) {
-        document.getElementById('incomeDrop').style.display = 'block';
-        document.getElementById('expenseDrop').style.display = 'none';
-        document.getElementById('transferDrop').style.display = 'none';
-        document.getElementById('salary').style.display = 'none';
-      }
-      else if (document.getElementById('expenseCheck').checked) {
+
+      if (document.getElementById('expenseCheck').checked) {
+        console.log('inside daybyeufybre ::: ', document.getElementById('incomeDrop').style.display);
+        document.getElementById('incomeDrop').style.display = 'none';
         document.getElementById('expenseDrop').style.display = 'block';
         document.getElementById('transferDrop').style.display = 'none';
-        document.getElementById('incomeDrop').style.display = 'none';
+      }
+      else if (document.getElementById('incomeCheck').checked) {
+        document.getElementById('expenseDrop').style.display = 'none';
+        document.getElementById('incomeDrop').style.display = 'block';
+        document.getElementById('transferDrop').style.display = 'none';
       }
       else if (document.getElementById('transferCheck').checked) {
         document.getElementById('transferDrop').style.display = 'block';
@@ -459,14 +419,15 @@
       alertMessage("Member Already In Account Group!! ");
     } else if ("<%= msg %>" == "deleted") {
       alertMessage("Member Removed From Account Group!! ");
-    } else if ("<%= msg %>" == "lowBalance") {
-      alertMessage("Your Account Have Low Balance For Your Expense");
-    } else if ("<%= msg %>" == "transferUnavailable") {
-      alertMessage("Your Account Have Low Balance For Transfer Amount");
+    } else if ("<%= msg %>" == "lowBalance" || "<%= msg %>" == "transferUnavailable") {
+      alertMessage("Your Account Have Low Balance For Your Expense OR Account Transfer");
     } else if ("<%= msg %>" == "noEdit") {
       alertMessage("You can Not Modified This because Of low balance");
     } else if ("<%= msg %>" == "updateTransaction") {
       alertMessage("Your Transaction Modified SuccessFully");
+    }
+    else if ("<%= msg %>" == "noDelete") {
+      alertMessage("Your Transaction can't delete because of LowBalance Issue");
     }
   </script>
   <%- include ("../partials/footer")%>

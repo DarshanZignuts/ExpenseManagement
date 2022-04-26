@@ -1,19 +1,33 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const authorise = require("../middleware/check_auth");
-const { getAllTransaction, getAddTransaction, addTransaction, getUpdateTransaction, updateTransaction, deleteTransaction } = require("../contollers/transaction");
+const authorise = require('../middleware/check_auth');
+const {
+  getAllTransaction,
+  //   getAddTransaction,
+  addTransaction,
+  getUpdateTransaction,
+  updateTransaction,
+  deleteTransaction,
+} = require('../contollers/transaction');
 
+router.get('/id/:accountId', authorise, getAllTransaction);
 
-router.get("/id/:accountId", authorise, getAllTransaction);
+// router.get('/addTransaction/id', authorise, getAddTransaction);
 
-router.get("/addTransaction/id",authorise, getAddTransaction);
+router.post('/addTransaction', authorise, addTransaction);
 
-router.post("/addTransaction/id", authorise, addTransaction);
+router.get(
+  '/updateTransaction/:transactionId',
+  authorise,
+  getUpdateTransaction
+);
 
-router.get("/updateTransaction/:transactionId", authorise, getUpdateTransaction);
+router.post('/updateTransaction/:transactionId', authorise, updateTransaction);
 
-router.post("/updateTransaction/:transactionId", authorise, updateTransaction);
-
-router.get("/deleteTransaction/id/:transactionId", authorise , deleteTransaction);
+router.get(
+  '/deleteTransaction/id/:transactionId',
+  authorise,
+  deleteTransaction
+);
 
 module.exports = router;

@@ -59,7 +59,7 @@
         return alert(msg);
       }
       promptBox = function (account) {
-        console.log('ainside Prompt');
+
         return prompt(account.name)
       }
       OpenPrompt = function (id, name) {
@@ -72,7 +72,6 @@
       addAcount = function () {
         let addAccount = prompt("Enter New Account Name");
         if (addAccount) {
-          console.log('inside with New Name ::: ', addAccount);
           window.location.href = `/account/addAccount?name=${addAccount}`
         }
       }

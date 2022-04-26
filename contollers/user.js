@@ -65,7 +65,6 @@ async function signUp(req, res) {
             });
     }
     } catch (err) {
-    console.log("error : ", err);
     res.status(400).json({
         msg: "error ....",
         error: err
@@ -83,7 +82,6 @@ async function getlogin(req, res) {
     try {
         res.render('pages/login', { result: { message: "Enter Your Login Detail" } });
     } catch (err) {
-        console.log("error : ", err);
         res.status(400).json({
             msg: "error ....",
             error: err
@@ -132,7 +130,6 @@ async function loginUser(req, res) {
             return res.status(401).render("pages/login", { result: { message: "Please Enter Your Detail To Login " } })
         })
     } catch (err) {
-        console.log("err in login : ", err);
         res.status(400).json({
             msg: "Unable to login, something went wrong!",
             error: err
