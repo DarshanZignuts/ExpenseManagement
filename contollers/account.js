@@ -137,6 +137,8 @@ async function addMember(req, res) {
       let transactions = await Transaction.find({ account: id });
       const memberData = await Account.find({ _id: id }, {});
       res.render('pages/transaction', {
+        accountDetail : account, 
+        name : memberData[0].name,
         transaction: transactions,
         accountId: id,
         account: memberData,
@@ -187,7 +189,10 @@ async function deleteMember(req, res) {
         msg: 'deleted',
       });
     } else {
+      const { account } = res.locals;
       res.render('pages/transaction', {
+        accountDetail : account, 
+        name : memberData[0].name,
         transaction: transactions,
         accountId: data._id,
         account: memberData,

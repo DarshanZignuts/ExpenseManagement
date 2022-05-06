@@ -1,6 +1,11 @@
 /*-------------------------
      Main Page  
 -------------------------*/
+
+body{ 
+  height: 870px;
+}
+
 .main-container {
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   background: url('../img/EMWallpaper.jpg') top center;
@@ -85,7 +90,7 @@
 }
 
 .scrollTransaction, .scrollMember {
-  height: 570px;
+  height: 740px;
   overflow-y: auto;
 }
 

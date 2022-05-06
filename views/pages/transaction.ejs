@@ -66,7 +66,7 @@
                   </h1>
                 </td>
                 <td colspan="2">
-                  <h5 style="color: rgba(255, 0, 255, 0.685); text-decoration: underline;">
+                  <h5 style="color: rgba(21, 255, 0, 0.603); text-decoration: underline;">
                     Balance: - > <%= account[0].balance%>
                   </h5>
                 </td>
@@ -142,8 +142,9 @@
     <div id="myModal" class="modal">
 
       <!-- Modal content -->
-      <div class="modal-content" style="color: black;">
+      <div class="modal-content" style="color: black;  width: 380px;">
         <form class="text-center form-group" action="/account/addMember" method="post">
+          <div class="form-inline text-center" style="width: 350px;">
           <table class="text-center">
             <thead colspan="2">
               <h6>ENTER MEMBER DETAILS</h6>
@@ -174,6 +175,7 @@
               </td>
             </tr>
           </table>
+        </div>
         </form>
       </div>
 
@@ -183,7 +185,7 @@
 
     <div id="transactionModel" class="modal">
       <!-- Modal content -->
-      <div class="modal-content" style="color: black;">
+      <div class="modal-content" style="color: black; width: 380px;">
         <form action="/transaction/addTransaction" method="post">
           <h2> Transaction Details :-> </h2>
 
@@ -209,8 +211,7 @@
                           <label for="from">From</label>
                         </td>
                         <td>
-
-                          <select id="transaction" name="income" style="width: 220px;" required>
+                          <select id="transaction" name="income" style="width: 210px;" required>
                             <optgroup label="Income">
                               <option value="salary">Salary</option>
                               <option value="saleItem">SaleItem</option>
@@ -225,8 +226,13 @@
                           <label for="to">To</label>
                         </td>
                         <td>
-                          <input type="text" value="<%= name %>" name="incomeTo" style="width: 220px; height: 27px;"
-                            readonly>
+                          <select id="transaction" name="incomeTo" style="width: 210px;" required>
+                            <optgroup label="To">
+                                  <option value="<%= account[0]._id%>">
+                                    <%= name %>
+                                  </option>
+                            </optgroup>
+                          </select>
                         </td>
                       </tr>
                     </table>
@@ -238,8 +244,13 @@
                           <label for="from">From</label>
                         </td>
                         <td>
-                          <input type="text" value=" <%= name %> " style="width: 220px; height: 30px;"
-                            name="expenseFrom" readonly>
+                          <select id="transaction" name="expenseFrom" style="width: 210px;" required>
+                            <optgroup label="From">
+                                  <option value="<%= account[0]._id%>">
+                                    <%= name %>
+                                  </option>
+                            </optgroup>
+                          </select>
                         </td>
                       </tr>
                       <tr>
@@ -247,7 +258,7 @@
                           <label for="to">To</label>
                         </td>
                         <td>
-                          <select id="transaction" name="expense" style="width: 220px;" required>
+                          <select id="transaction" name="expense" style="width: 210px;" required>
                             <optgroup label="Expense">
                               <option value="food">Food</option>
                               <option value="shopping">Shopping</option>
@@ -255,6 +266,7 @@
                               <option value="travaling">Travaling</option>
                               <option value="tour">Tour</option>
                               <option value="rent">Rent</option>
+                              <option value="other">Other</option>
                             </optgroup>
                           </select>
                         </td>
@@ -272,13 +284,11 @@
                             <select id="transaction" name="accountFrom" style="width: 210px;" required>
                               <!-- <input type="text" name="" id=""> -->
                               <optgroup label="From AccountTransfer">
-                                <% for (let i=0 ; i < account.length; i++ ){%>
-                                  <% if(accountId==account[i]._id){ %>
-                                    <option value="<%= account[i]._id%>">
-                                      <%= account[i].name %>
+
+                                    <option value="<%= account[0]._id%>">
+                                      <%= name %>
                                     </option>
-                                    <% } %>
-                                      <% } %>
+
                               </optgroup>
                             </select>
                           </td>
@@ -288,7 +298,7 @@
                             <label for="to">To</label>
                           </td>
                           <td>
-                            <select id="transaction" name="accountTo" style="width: 220px;" required>
+                            <select id="transaction" name="accountTo" style="width: 210px;" required>
                               <optgroup label="To AccountTransfer">
                                 <% for (let i=0 ; i < accountDetail.length; i++ ){ %>
                                   <%if(accountId !=accountDetail[i].id){ %>
